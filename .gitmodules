@@ -432,7 +432,7 @@
 	os = all
 [submodule "third_party/webrtc"]
 	path = third_party/webrtc
-	url = https://chromium.googlesource.com/external/webrtc/stable/src.git
+	url = https://chromium.googlesource.com/external/webrtc/stable/webrtc.git
 	os = all
 [submodule "third_party/xdg-utils"]
 	path = third_party/xdg-utils
