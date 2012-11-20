@@ -186,6 +186,10 @@
 	path = third_party/ffmpeg
 	url = https://chromium.googlesource.com/chromium/third_party/ffmpeg.git
 	os = all
+[submodule "third_party/findbugs"]
+	path = third_party/findbugs
+	url = https://chromium.googlesource.com/chromium/deps/findbugs.git
+	os = android
 [submodule "third_party/flac"]
 	path = third_party/flac
 	url = https://chromium.googlesource.com/chromium/deps/flac.git
@@ -432,7 +436,7 @@
 	os = all
 [submodule "third_party/webrtc"]
 	path = third_party/webrtc
-	url = https://chromium.googlesource.com/external/webrtc/stable/src.git
+	url = https://chromium.googlesource.com/external/webrtc/stable/webrtc.git
 	os = all
 [submodule "third_party/xdg-utils"]
 	path = third_party/xdg-utils
