@@ -148,7 +148,7 @@
 	os = all
 [submodule "third_party/android_tools"]
 	path = third_party/android_tools
-	url = https://chromium.googlesource.com/android_tools.git
+	url = https://git.chromium.org/android_tools.git
 	os = android
 [submodule "third_party/angle"]
 	path = third_party/angle
@@ -186,13 +186,17 @@
 	path = third_party/ffmpeg
 	url = https://chromium.googlesource.com/chromium/third_party/ffmpeg.git
 	os = all
+[submodule "third_party/findbugs"]
+	path = third_party/findbugs
+	url = https://chromium.googlesource.com/chromium/deps/findbugs.git
+	os = android
 [submodule "third_party/flac"]
 	path = third_party/flac
 	url = https://chromium.googlesource.com/chromium/deps/flac.git
 	os = all
 [submodule "third_party/freetype"]
 	path = third_party/freetype
-	url = https://chromium.googlesource.com/chromium/src/third_party/freetype.git
+	url = https://git.chromium.org/chromium/src/third_party/freetype.git
 	os = android
 [submodule "third_party/gnu_binutils"]
 	path = third_party/gnu_binutils
@@ -206,6 +210,10 @@
 	path = third_party/gperf
 	url = https://chromium.googlesource.com/chromium/deps/gperf.git
 	os = win
+[submodule "third_party/guava/src"]
+	path = third_party/guava/src
+	url = https://git.chromium.org/external/guava-libraries.git
+	os = android
 [submodule "third_party/hunspell"]
 	path = third_party/hunspell
 	url = https://chromium.googlesource.com/chromium/deps/hunspell.git
@@ -226,6 +234,10 @@
 	path = third_party/jsoncpp/source/src/lib_json
 	url = https://chromium.googlesource.com/external/jsoncpp/jsoncpp/src/lib_json.git
 	os = all
+[submodule "third_party/jsr-305/src"]
+	path = third_party/jsr-305/src
+	url = https://chromium.googlesource.com/external/jsr-305.git
+	os = android
 [submodule "third_party/leveldatabase/src"]
 	path = third_party/leveldatabase/src
 	url = https://chromium.googlesource.com/external/leveldb.git
@@ -282,14 +294,6 @@
 	path = third_party/mingw-w64/mingw/bin
 	url = https://chromium.googlesource.com/native_client/deps/third_party/mingw-w64/mingw/bin.git
 	os = win
-[submodule "third_party/mozc/chrome/chromeos/renderer"]
-	path = third_party/mozc/chrome/chromeos/renderer
-	url = https://chromium.googlesource.com/external/mozc/src/chrome/chromeos/renderer.git
-	os = all
-[submodule "third_party/mozc/session"]
-	path = third_party/mozc/session
-	url = https://chromium.googlesource.com/external/mozc/src/session.git
-	os = all
 [submodule "third_party/mtpd/source"]
 	path = third_party/mtpd/source
 	url = https://chromium.googlesource.com/chromiumos/platform/mtpd.git
@@ -432,7 +436,7 @@
 	os = all
 [submodule "third_party/webrtc"]
 	path = third_party/webrtc
-	url = https://chromium.googlesource.com/external/webrtc/stable/src.git
+	url = https://chromium.googlesource.com/external/webrtc/stable/webrtc.git
 	os = all
 [submodule "third_party/xdg-utils"]
 	path = third_party/xdg-utils
