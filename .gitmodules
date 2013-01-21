@@ -22,6 +22,10 @@
 	path = chrome/test/data/perf/frame_rate/content
 	url = https://chromium.googlesource.com/chromium/frame_rate/content.git
 	os = all
+[submodule "chrome/test/data/perf/third_party/octane"]
+	path = chrome/test/data/perf/third_party/octane
+	url = https://chromium.googlesource.com/external/octane-benchmark.git
+	os = all
 [submodule "chrome/tools/test/reference_build/chrome_linux"]
 	path = chrome/tools/test/reference_build/chrome_linux
 	url = https://chromium.googlesource.com/chromium/reference_builds/chrome_linux.git
@@ -38,12 +42,16 @@
 	path = chrome_frame/tools/test/reference_build/chrome_win
 	url = https://chromium.googlesource.com/chromium/reference_builds/chrome_win.git
 	os = win
+[submodule "content/test/data/layout_tests/LayoutTests/editing/pasteboard/resources"]
+	path = content/test/data/layout_tests/LayoutTests/editing/pasteboard/resources
+	url = 
+	os = ios
 [submodule "content/test/data/layout_tests/LayoutTests/fast/events"]
 	path = content/test/data/layout_tests/LayoutTests/fast/events
 	url = 
 	os = ios
-[submodule "content/test/data/layout_tests/LayoutTests/fast/filesystem/resources"]
-	path = content/test/data/layout_tests/LayoutTests/fast/filesystem/resources
+[submodule "content/test/data/layout_tests/LayoutTests/fast/filesystem_temp"]
+	path = content/test/data/layout_tests/LayoutTests/fast/filesystem_temp
 	url = 
 	os = ios
 [submodule "content/test/data/layout_tests/LayoutTests/fast/js/resources"]
@@ -146,6 +154,10 @@
 	path = third_party/WebKit
 	url = https://chromium.googlesource.com/external/WebKit_trimmed.git
 	os = all
+[submodule "third_party/accessibility-developer-tools"]
+	path = third_party/accessibility-developer-tools
+	url = https://chromium.googlesource.com/external/accessibility-developer-tools.git
+	os = all
 [submodule "third_party/android_tools"]
 	path = third_party/android_tools
 	url = https://chromium.googlesource.com/android_tools.git
@@ -157,6 +169,10 @@
 [submodule "third_party/aosp"]
 	path = third_party/aosp
 	url = https://chromium.googlesource.com/chromium/deps/aosp.git
+	os = android
+[submodule "third_party/apache-mime4j"]
+	path = third_party/apache-mime4j
+	url = https://chromium.googlesource.com/chromium/deps/apache-mime4j.git
 	os = android
 [submodule "third_party/bidichecker"]
 	path = third_party/bidichecker
@@ -182,10 +198,18 @@
 	path = third_party/cygwin
 	url = https://chromium.googlesource.com/chromium/deps/cygwin.git
 	os = win
+[submodule "third_party/eyesfree/src/android/java/src/com/googlecode/eyesfree/braille"]
+	path = third_party/eyesfree/src/android/java/src/com/googlecode/eyesfree/braille
+	url = https://chromium.googlesource.com/external/eyes-free/braille/client/src/com/googlecode/eyesfree/braille.git
+	os = android
 [submodule "third_party/ffmpeg"]
 	path = third_party/ffmpeg
 	url = https://chromium.googlesource.com/chromium/third_party/ffmpeg.git
 	os = all
+[submodule "third_party/findbugs"]
+	path = third_party/findbugs
+	url = https://chromium.googlesource.com/chromium/deps/findbugs.git
+	os = android
 [submodule "third_party/flac"]
 	path = third_party/flac
 	url = https://chromium.googlesource.com/chromium/deps/flac.git
@@ -206,6 +230,18 @@
 	path = third_party/gperf
 	url = https://chromium.googlesource.com/chromium/deps/gperf.git
 	os = win
+[submodule "third_party/guava/src"]
+	path = third_party/guava/src
+	url = https://chromium.googlesource.com/external/guava-libraries.git
+	os = android
+[submodule "third_party/httpcomponents-client"]
+	path = third_party/httpcomponents-client
+	url = https://chromium.googlesource.com/chromium/deps/httpcomponents-client.git
+	os = android
+[submodule "third_party/httpcomponents-core"]
+	path = third_party/httpcomponents-core
+	url = https://chromium.googlesource.com/chromium/deps/httpcomponents-core.git
+	os = android
 [submodule "third_party/hunspell"]
 	path = third_party/hunspell
 	url = https://chromium.googlesource.com/chromium/deps/hunspell.git
@@ -218,6 +254,10 @@
 	path = third_party/icu
 	url = https://chromium.googlesource.com/chromium/deps/icu46.git
 	os = all
+[submodule "third_party/jarjar"]
+	path = third_party/jarjar
+	url = https://chromium.googlesource.com/chromium/deps/jarjar.git
+	os = android
 [submodule "third_party/jsoncpp/source/include"]
 	path = third_party/jsoncpp/source/include
 	url = https://chromium.googlesource.com/external/jsoncpp/jsoncpp/include.git
@@ -226,6 +266,10 @@
 	path = third_party/jsoncpp/source/src/lib_json
 	url = https://chromium.googlesource.com/external/jsoncpp/jsoncpp/src/lib_json.git
 	os = all
+[submodule "third_party/jsr-305/src"]
+	path = third_party/jsr-305/src
+	url = https://chromium.googlesource.com/external/jsr-305.git
+	os = android
 [submodule "third_party/leveldatabase/src"]
 	path = third_party/leveldatabase/src
 	url = https://chromium.googlesource.com/external/leveldb.git
@@ -282,14 +326,6 @@
 	path = third_party/mingw-w64/mingw/bin
 	url = https://chromium.googlesource.com/native_client/deps/third_party/mingw-w64/mingw/bin.git
 	os = win
-[submodule "third_party/mozc/chrome/chromeos/renderer"]
-	path = third_party/mozc/chrome/chromeos/renderer
-	url = https://chromium.googlesource.com/external/mozc/src/chrome/chromeos/renderer.git
-	os = all
-[submodule "third_party/mozc/session"]
-	path = third_party/mozc/session
-	url = https://chromium.googlesource.com/external/mozc/src/session.git
-	os = all
 [submodule "third_party/mtpd/source"]
 	path = third_party/mtpd/source
 	url = https://chromium.googlesource.com/chromiumos/platform/mtpd.git
@@ -432,7 +468,7 @@
 	os = all
 [submodule "third_party/webrtc"]
 	path = third_party/webrtc
-	url = https://chromium.googlesource.com/external/webrtc/stable/src.git
+	url = https://chromium.googlesource.com/external/webrtc/stable/webrtc.git
 	os = all
 [submodule "third_party/xdg-utils"]
 	path = third_party/xdg-utils
@@ -473,4 +509,8 @@
 [submodule "v8"]
 	path = v8
 	url = https://chromium.googlesource.com/external/v8.git
+	os = all
+[submodule "webkit/media/crypto/ppapi/cdm"]
+	path = webkit/media/crypto/ppapi/cdm
+	url = https://chromium.googlesource.com/chromium/cdm.git
 	os = all
