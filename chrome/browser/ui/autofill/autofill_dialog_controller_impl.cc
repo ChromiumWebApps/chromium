@@ -921,6 +921,11 @@ void AutofillDialogControllerImpl::PrepareDetailInputsForSection(
 
   if (view_)
     view_->UpdateSection(section);
+
+  // If a suggestion is forced into edit mode, update the view to show the
+  // errors.
+  if (view_ && wrapper && IsEditingExistingData(section))
+    view_->UpdateForErrors();
 }
 
 const DetailInputs& AutofillDialogControllerImpl::RequestedFieldsForSection(
@@ -1075,10 +1080,8 @@ string16 AutofillDialogControllerImpl::SuggestionTextForSection(
   if (!IsASuggestionItemKey(item_key))
     return string16();
 
-  if (section == SECTION_EMAIL) {
-    string16 email_address = model->GetLabelAt(model->checked_item());
-    return IsValidEmailAddress(email_address) ? email_address : string16();
-  }
+  if (section == SECTION_EMAIL)
+    return model->GetLabelAt(model->checked_item());
 
   scoped_ptr<DataModelWrapper> wrapper = CreateWrapper(section);
   return wrapper->GetDisplayText();
@@ -2327,7 +2330,7 @@ void AutofillDialogControllerImpl::SuggestionsUpdated() {
       std::vector<string16> values;
       profiles[i]->GetMultiInfo(EMAIL_ADDRESS, app_locale, &values);
       for (size_t j = 0; j < values.size(); ++j) {
-        if (!values[j].empty())
+        if (IsValidEmailAddress(values[j]))
           suggested_email_.AddKeyedItem(profiles[i]->guid(), values[j]);
       }
 

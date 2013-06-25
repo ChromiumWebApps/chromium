@@ -8,7 +8,7 @@ vars = {
   "sourceforge_url": "http://%(repo)s.svn.sourceforge.net/svnroot/%(repo)s",
   "webkit_trunk": "http://src.chromium.org/blink/trunk",
   "nacl_trunk": "http://src.chromium.org/native_client/trunk",
-  "webkit_revision": "152953",
+  "webkit_revision": "152979",
   "chromium_git": "https://chromium.googlesource.com",
   "chromiumos_git": "https://chromium.googlesource.com/chromiumos",
   "swig_revision": "69281",
@@ -71,7 +71,7 @@ deps = {
     "/external/angle.git@f576cb24c8fc02d3f2fb90faebdcf333fb27892f",
 
   "src/third_party/trace-viewer":
-    (Var("googlecode_url") % "trace-viewer") + "/trunk@623",
+    (Var("googlecode_url") % "trace-viewer") + "/trunk@653",
 
   "src/third_party/WebKit":
     Var("webkit_trunk") + "@" + Var("webkit_revision"),
@@ -105,7 +105,7 @@ deps = {
     (Var("googlecode_url") % "grit-i18n") + "/trunk@127",
 
   "src/tools/gyp":
-    (Var("googlecode_url") % "gyp") + "/trunk@1652",
+    (Var("googlecode_url") % "gyp") + "/trunk@1654",
 
   "src/tools/swarm_client":
     "/trunk/tools/swarm_client@" + Var("swarm_revision"),

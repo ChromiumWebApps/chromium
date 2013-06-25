@@ -829,10 +829,8 @@ TEST_F(AutofillDialogControllerTest, InvalidSavedEmail) {
   AutofillProfile profile(test::GetVerifiedProfile());
   profile.SetRawInfo(EMAIL_ADDRESS, ASCIIToUTF16(".!#$%&'*+/=?^_`-@-.."));
   controller()->GetTestingManager()->AddTestingProfile(&profile);
-
-  controller()->MenuModelForSection(SECTION_EMAIL)->ActivatedAt(0);
-  EXPECT_TRUE(
-      controller()->SuggestionStateForSection(SECTION_EMAIL).text.empty());
+  EXPECT_EQ(static_cast<ui::MenuModel*>(NULL),
+            controller()->MenuModelForSection(SECTION_EMAIL));
 }
 
 TEST_F(AutofillDialogControllerTest, AutofillCreditCards) {
@@ -1868,6 +1866,10 @@ TEST_F(AutofillDialogControllerTest, SaveDetailsInChrome) {
 
 // Tests that user is prompted when using instrument with minimal address.
 TEST_F(AutofillDialogControllerTest, UpgradeMinimalAddress) {
+  // A minimal address being selected should trigger error validation in the
+  // view. Called once for each incomplete suggestion.
+  EXPECT_CALL(*controller()->GetView(), UpdateForErrors()).Times(2);
+
   scoped_ptr<wallet::WalletItems> wallet_items = wallet::GetTestWalletItems();
   wallet_items->AddInstrument(wallet::GetTestMaskedInstrumentWithIdAndAddress(
       "id", wallet::GetTestMinimalAddress()));
