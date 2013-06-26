@@ -83,6 +83,9 @@ WebMediaPlayerAndroid::WebMediaPlayerAndroid(
       manager_(manager),
       network_state_(WebMediaPlayer::NetworkStateEmpty),
       ready_state_(WebMediaPlayer::ReadyStateHaveNothing),
+      texture_id_(0),
+      texture_mailbox_sync_point_(0),
+      stream_id_(0),
       is_playing_(false),
       needs_establish_peer_(true),
       stream_texture_proxy_initialized_(false),
@@ -128,7 +131,11 @@ WebMediaPlayerAndroid::WebMediaPlayerAndroid(
   if (stream_texture_factory_) {
     stream_texture_proxy_.reset(stream_texture_factory_->CreateProxy());
     if (needs_establish_peer_) {
-      stream_id_ = stream_texture_factory_->CreateStreamTexture(&texture_id_);
+      stream_id_ = stream_texture_factory_->CreateStreamTexture(
+          kGLTextureExternalOES,
+          &texture_id_,
+          &texture_mailbox_,
+          &texture_mailbox_sync_point_);
       ReallocateVideoFrame();
     }
   }
@@ -790,7 +797,11 @@ void WebMediaPlayerAndroid::ReallocateVideoFrame() {
 #endif
   } else if (texture_id_) {
     current_frame_ = VideoFrame::WrapNativeTexture(
-        texture_id_, kGLTextureExternalOES, natural_size_,
+        new VideoFrame::MailboxHolder(
+            texture_mailbox_,
+            texture_mailbox_sync_point_,
+            VideoFrame::MailboxHolder::TextureNoLongerNeededCallback()),
+        kGLTextureExternalOES, natural_size_,
         gfx::Rect(natural_size_), natural_size_, base::TimeDelta(),
         VideoFrame::ReadPixelsCB(),
         base::Closure());
@@ -833,7 +844,13 @@ void WebMediaPlayerAndroid::EstablishSurfaceTexturePeer() {
     stream_texture_factory_->DestroyStreamTexture(texture_id_);
     stream_id_ = 0;
     texture_id_ = 0;
-    stream_id_ = stream_texture_factory_->CreateStreamTexture(&texture_id_);
+    texture_mailbox_ = gpu::Mailbox();
+    texture_mailbox_sync_point_ = 0;
+    stream_id_ = stream_texture_factory_->CreateStreamTexture(
+        kGLTextureExternalOES,
+        &texture_id_,
+        &texture_mailbox_,
+        &texture_mailbox_sync_point_);
     ReallocateVideoFrame();
     stream_texture_proxy_initialized_ = false;
   }
@@ -889,7 +906,7 @@ bool WebMediaPlayerAndroid::RetrieveGeometryChange(gfx::RectF* rect) {
 // UMA_HISTOGRAM_COUNTS. The reason that we cannot use those macros directly is
 // that UMA_* macros require the names to be constant throughout the process'
 // lifetime.
-static void EmeUMAHistogramEnumeration(const std::string& key_system,
+static void EmeUMAHistogramEnumeration(const WebKit::WebString& key_system,
                                        const std::string& method,
                                        int sample,
                                        int boundary_value) {
@@ -899,7 +916,7 @@ static void EmeUMAHistogramEnumeration(const std::string& key_system,
       base::Histogram::kUmaTargetedHistogramFlag)->Add(sample);
 }
 
-static void EmeUMAHistogramCounts(const std::string& key_system,
+static void EmeUMAHistogramCounts(const WebKit::WebString& key_system,
                                   const std::string& method,
                                   int sample) {
   // Use the same parameters as UMA_HISTOGRAM_COUNTS.
@@ -940,7 +957,7 @@ static void ReportMediaKeyExceptionToUMA(
   MediaKeyException result_id = MediaKeyExceptionForUMA(e);
   DCHECK_NE(result_id, kUnknownResultId) << e;
   EmeUMAHistogramEnumeration(
-      key_system.utf8(), method, result_id, kMaxMediaKeyException);
+      key_system, method, result_id, kMaxMediaKeyException);
 }
 
 WebMediaPlayer::MediaKeyException WebMediaPlayerAndroid::generateKeyRequest(
@@ -1050,7 +1067,7 @@ WebMediaPlayerAndroid::CancelKeyRequestInternal(
 }
 
 void WebMediaPlayerAndroid::OnKeyAdded(const std::string& session_id) {
-  EmeUMAHistogramCounts(current_key_system_.utf8(), "KeyAdded", 1);
+  EmeUMAHistogramCounts(current_key_system_, "KeyAdded", 1);
 
   if (media_source_delegate_)
     media_source_delegate_->NotifyKeyAdded(current_key_system_.utf8());
@@ -1061,7 +1078,7 @@ void WebMediaPlayerAndroid::OnKeyAdded(const std::string& session_id) {
 void WebMediaPlayerAndroid::OnKeyError(const std::string& session_id,
                                        media::MediaKeys::KeyError error_code,
                                        int system_code) {
-  EmeUMAHistogramEnumeration(current_key_system_.utf8(), "KeyError",
+  EmeUMAHistogramEnumeration(current_key_system_, "KeyError",
                              error_code, media::MediaKeys::kMaxKeyError);
 
   client_->keyError(

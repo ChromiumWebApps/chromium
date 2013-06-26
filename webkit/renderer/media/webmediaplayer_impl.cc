@@ -589,30 +589,49 @@ bool WebMediaPlayerImpl::copyVideoTextureToPlatformTexture(
     base::AutoLock auto_lock(lock_);
     video_frame = current_frame_;
   }
-  if (video_frame.get() &&
-      video_frame->format() == media::VideoFrame::NATIVE_TEXTURE &&
-      video_frame->texture_target() == GL_TEXTURE_2D) {
-    uint32 source_texture = video_frame->texture_id();
-    // The video is stored in a unmultiplied format, so premultiply
-    // if necessary.
-    web_graphics_context->pixelStorei(GL_UNPACK_PREMULTIPLY_ALPHA_CHROMIUM,
-        premultiply_alpha);
-    // Application itself needs to take care of setting the right flip_y
-    // value down to get the expected result.
-    // flip_y==true means to reverse the video orientation while
-    // flip_y==false means to keep the intrinsic orientation.
-    web_graphics_context->pixelStorei(GL_UNPACK_FLIP_Y_CHROMIUM, flip_y);
-    web_graphics_context->copyTextureCHROMIUM(GL_TEXTURE_2D,
-        source_texture, texture, level, internal_format, type);
-    web_graphics_context->pixelStorei(GL_UNPACK_FLIP_Y_CHROMIUM, false);
-    web_graphics_context->pixelStorei(GL_UNPACK_PREMULTIPLY_ALPHA_CHROMIUM,
-        false);
-    // The flush() operation is not necessary here. It is kept since the
-    // performance will be better when it is added than not.
-    web_graphics_context->flush();
-    return true;
-  }
-  return false;
+
+  if (!video_frame.get())
+    return false;
+  if (video_frame->format() != media::VideoFrame::NATIVE_TEXTURE)
+    return false;
+  if (video_frame->texture_target() != GL_TEXTURE_2D)
+    return false;
+
+  scoped_refptr<media::VideoFrame::MailboxHolder> mailbox_holder =
+      video_frame->texture_mailbox();
+
+  uint32 source_texture = web_graphics_context->createTexture();
+
+  web_graphics_context->waitSyncPoint(mailbox_holder->sync_point());
+  web_graphics_context->bindTexture(GL_TEXTURE_2D, source_texture);
+  web_graphics_context->consumeTextureCHROMIUM(GL_TEXTURE_2D,
+                                               mailbox_holder->mailbox().name);
+
+  // The video is stored in a unmultiplied format, so premultiply
+  // if necessary.
+  web_graphics_context->pixelStorei(GL_UNPACK_PREMULTIPLY_ALPHA_CHROMIUM,
+                                    premultiply_alpha);
+  // Application itself needs to take care of setting the right flip_y
+  // value down to get the expected result.
+  // flip_y==true means to reverse the video orientation while
+  // flip_y==false means to keep the intrinsic orientation.
+  web_graphics_context->pixelStorei(GL_UNPACK_FLIP_Y_CHROMIUM, flip_y);
+  web_graphics_context->copyTextureCHROMIUM(GL_TEXTURE_2D,
+                                            source_texture,
+                                            texture,
+                                            level,
+                                            internal_format,
+                                            type);
+  web_graphics_context->pixelStorei(GL_UNPACK_FLIP_Y_CHROMIUM, false);
+  web_graphics_context->pixelStorei(GL_UNPACK_PREMULTIPLY_ALPHA_CHROMIUM,
+                                    false);
+
+  web_graphics_context->deleteTexture(source_texture);
+
+  // The flush() operation is not necessary here. It is kept since the
+  // performance will be better when it is added than not.
+  web_graphics_context->flush();
+  return true;
 }
 
 // Helper functions to report media EME related stats to UMA. They follow the
@@ -620,7 +639,7 @@ bool WebMediaPlayerImpl::copyVideoTextureToPlatformTexture(
 // UMA_HISTOGRAM_COUNTS. The reason that we cannot use those macros directly is
 // that UMA_* macros require the names to be constant throughout the process'
 // lifetime.
-static void EmeUMAHistogramEnumeration(const std::string& key_system,
+static void EmeUMAHistogramEnumeration(const WebKit::WebString& key_system,
                                        const std::string& method,
                                        int sample,
                                        int boundary_value) {
@@ -630,7 +649,7 @@ static void EmeUMAHistogramEnumeration(const std::string& key_system,
       base::Histogram::kUmaTargetedHistogramFlag)->Add(sample);
 }
 
-static void EmeUMAHistogramCounts(const std::string& key_system,
+static void EmeUMAHistogramCounts(const WebKit::WebString& key_system,
                                   const std::string& method,
                                   int sample) {
   // Use the same parameters as UMA_HISTOGRAM_COUNTS.
@@ -671,7 +690,7 @@ static void ReportMediaKeyExceptionToUMA(
   MediaKeyException result_id = MediaKeyExceptionForUMA(e);
   DCHECK_NE(result_id, kUnknownResultId) << e;
   EmeUMAHistogramEnumeration(
-      key_system.utf8(), method, result_id, kMaxMediaKeyException);
+      key_system, method, result_id, kMaxMediaKeyException);
 }
 
 WebMediaPlayer::MediaKeyException
@@ -844,7 +863,7 @@ void WebMediaPlayerImpl::OnPipelineError(PipelineStatus error) {
   SetNetworkState(PipelineErrorToNetworkState(error));
 
   if (error == media::PIPELINE_ERROR_DECRYPT)
-    EmeUMAHistogramCounts(current_key_system_.utf8(), "DecryptError", 1);
+    EmeUMAHistogramCounts(current_key_system_, "DecryptError", 1);
 
   // Repaint to trigger UI update.
   Repaint();
@@ -887,7 +906,7 @@ void WebMediaPlayerImpl::OnDemuxerOpened(
 
 void WebMediaPlayerImpl::OnKeyAdded(const std::string& session_id) {
   DCHECK(main_loop_->BelongsToCurrentThread());
-  EmeUMAHistogramCounts(current_key_system_.utf8(), "KeyAdded", 1);
+  EmeUMAHistogramCounts(current_key_system_, "KeyAdded", 1);
   GetClient()->keyAdded(current_key_system_,
                         WebString::fromUTF8(session_id));
 }
@@ -936,7 +955,7 @@ void WebMediaPlayerImpl::OnKeyError(const std::string& session_id,
                                     int system_code) {
   DCHECK(main_loop_->BelongsToCurrentThread());
 
-  EmeUMAHistogramEnumeration(current_key_system_.utf8(), "KeyError",
+  EmeUMAHistogramEnumeration(current_key_system_, "KeyError",
                              error_code, media::MediaKeys::kMaxKeyError);
 
   GetClient()->keyError(

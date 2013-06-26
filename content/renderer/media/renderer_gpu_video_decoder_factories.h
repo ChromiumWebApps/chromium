@@ -17,6 +17,7 @@
 #include "ui/gfx/size.h"
 
 namespace base {
+class MessageLoopProxy;
 class WaitableEvent;
 }
 
@@ -41,17 +42,22 @@ class CONTENT_EXPORT RendererGpuVideoDecoderFactories
   // use.
   RendererGpuVideoDecoderFactories(
       GpuChannelHost* gpu_channel_host,
-      const scoped_refptr<base::MessageLoopProxy>& message_loop,
+      const scoped_refptr<base::MessageLoopProxy>& compositor_message_loop,
       WebGraphicsContext3DCommandBufferImpl* wgc3dcbi);
 
   // media::GpuVideoDecoder::Factories implementation.
   virtual media::VideoDecodeAccelerator* CreateVideoDecodeAccelerator(
       media::VideoCodecProfile profile,
       media::VideoDecodeAccelerator::Client* client) OVERRIDE;
-  virtual bool CreateTextures(int32 count, const gfx::Size& size,
-                              std::vector<uint32>* texture_ids,
-                              uint32 texture_target) OVERRIDE;
+  // Creates textures and produces them into mailboxes. Returns a sync point to
+  // wait on before using the mailboxes, or 0 on failure.
+  virtual uint32 CreateTextures(
+      int32 count, const gfx::Size& size,
+      std::vector<uint32>* texture_ids,
+      std::vector<gpu::Mailbox>* texture_mailboxes,
+      uint32 texture_target) OVERRIDE;
   virtual void DeleteTexture(uint32 texture_id) OVERRIDE;
+  virtual void WaitSyncPoint(uint32 sync_point) OVERRIDE;
   virtual void ReadPixels(uint32 texture_id,
                           uint32 texture_target,
                           const gfx::Size& size,
@@ -74,21 +80,23 @@ class CONTENT_EXPORT RendererGpuVideoDecoderFactories
   // of return values and each takes a WaitableEvent* param to signal completion
   // (except for DeleteTexture, which is fire-and-forget).
   // AsyncCreateSharedMemory runs on the renderer thread and the rest run on
-  // |message_loop_|.
+  // |compositor_message_loop_|.
   // The AsyncCreateVideoDecodeAccelerator returns its output in the vda_
   // member.
   void AsyncCreateVideoDecodeAccelerator(
       media::VideoCodecProfile profile,
       media::VideoDecodeAccelerator::Client* client);
   void AsyncCreateTextures(int32 count, const gfx::Size& size,
-                           uint32 texture_target);
+                           uint32 texture_target, uint32* sync_point);
   void AsyncDeleteTexture(uint32 texture_id);
+  void AsyncWaitSyncPoint(uint32 sync_point);
   void AsyncReadPixels(uint32 texture_id, uint32 texture_target,
                        const gfx::Size& size);
   void AsyncCreateSharedMemory(size_t size);
   void AsyncDestroyVideoDecodeAccelerator();
 
-  scoped_refptr<base::MessageLoopProxy> message_loop_;
+  scoped_refptr<base::MessageLoopProxy> compositor_message_loop_;
+  scoped_refptr<base::MessageLoopProxy> main_message_loop_;
   scoped_refptr<GpuChannelHost> gpu_channel_host_;
   base::WeakPtr<WebGraphicsContext3DCommandBufferImpl> context_;
 
@@ -116,6 +124,7 @@ class CONTENT_EXPORT RendererGpuVideoDecoderFactories
 
   // Textures returned by the CreateTexture() function.
   std::vector<uint32> created_textures_;
+  std::vector<gpu::Mailbox> created_texture_mailboxes_;
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(RendererGpuVideoDecoderFactories);
 };
