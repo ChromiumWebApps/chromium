@@ -11021,6 +11021,14 @@ other types of suffix sets.
   </summary>
 </histogram>
 
+<histogram name="PasswordManager.NumPasswordsNotShown">
+  <summary>
+    The password manager only shows those credentials that are considered the
+    best match for a particular form. This stat keep track of the credentials
+    that were not as good of a match and were suppressed.
+  </summary>
+</histogram>
+
 <histogram name="PasswordManager.OtherPossibleUsernamesUsage"
     enum="OtherPossibleUsernamesUsage">
   <summary>
@@ -11426,6 +11434,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap0.Time1" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11433,6 +11444,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap0.Time2" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11440,6 +11454,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap0.Time3" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11447,6 +11464,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap0.Time4" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11454,6 +11474,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap1.Time1" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11461,6 +11484,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap1.Time2" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11468,6 +11494,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap1.Time3" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11475,6 +11504,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap1.Time4" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11482,6 +11514,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap2.Time1" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11489,6 +11524,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap2.Time2" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11496,6 +11534,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap2.Time3" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11503,6 +11544,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap2.Time4" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11510,6 +11554,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap3.Time1" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11517,6 +11564,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap3.Time2" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11524,6 +11574,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap3.Time3" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11531,6 +11584,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.Scroll.Cpu.Swap3.Time4" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11539,6 +11595,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap0.Time1"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11547,6 +11606,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap0.Time2"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11555,6 +11617,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap0.Time3"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11563,6 +11628,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap0.Time4"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11571,6 +11639,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap1.Time1"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11579,6 +11650,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap1.Time2"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11587,6 +11661,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap1.Time3"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11595,6 +11672,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap1.Time4"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11603,6 +11683,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap2.Time1"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11611,6 +11694,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap2.Time2"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11627,6 +11713,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap2.Time4"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11635,6 +11724,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap3.Time1"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11643,6 +11735,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap3.Time2"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11651,6 +11746,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap3.Time3"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11659,6 +11757,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.Scroll.Faults.Swap3.Time4"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     scroll event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11666,6 +11767,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap0.Time1" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11673,6 +11777,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap0.Time2" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11680,6 +11787,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap0.Time3" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11687,6 +11797,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap0.Time4" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11694,6 +11807,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap1.Time1" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11701,6 +11817,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap1.Time2" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11708,6 +11827,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap1.Time3" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11715,6 +11837,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap1.Time4" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11722,6 +11847,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap2.Time1" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11729,6 +11857,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap2.Time2" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11736,6 +11867,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap2.Time3" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11743,6 +11877,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap2.Time4" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11750,6 +11887,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap3.Time1" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11757,6 +11897,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap3.Time2" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11764,6 +11907,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap3.Time3" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11771,6 +11917,9 @@ other types of suffix sets.
 </histogram>
 
 <histogram name="Platform.SwapJank.TabSwitch.Cpu.Swap3.Time4" units="%">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     CPU utilization for the specified swap group and time interval after a tab
     switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11779,6 +11928,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap0.Time1"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11787,6 +11939,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap0.Time2"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11795,6 +11950,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap0.Time3"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11803,6 +11961,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap0.Time4"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11811,6 +11972,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap1.Time1"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11819,6 +11983,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap1.Time2"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11827,6 +11994,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap1.Time3"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11835,6 +12005,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap1.Time4"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11843,6 +12016,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap2.Time1"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11851,6 +12027,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap2.Time2"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11859,6 +12038,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap2.Time3"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11867,6 +12049,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap2.Time4"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11875,6 +12060,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap3.Time1"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11883,6 +12071,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap3.Time2"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11891,6 +12082,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap3.Time3"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -11899,6 +12093,9 @@ other types of suffix sets.
 
 <histogram name="Platform.SwapJank.TabSwitch.Faults.Swap3.Time4"
     units="page faults/second">
+  <obsolete>
+    Deprecated 9/2013 when the SwapJank64vs32Parrot experiment ended.
+  </obsolete>
   <summary>
     Page faults/second for the specified swap group and time interval after a
     tab switch event.  See src/chrome/browser/chromeos/swap_metrics.cc.
@@ -21538,6 +21735,32 @@ other types of suffix sets.
   <int value="125" label="NavigatorVendorSub"/>
   <int value="126" label="FileError"/>
   <int value="127" label="DocumentCharset"/>
+  <int value="128" label="PrefixedAnimationEndEvent"/>
+  <int value="129" label="UnprefixedAnimationEndEvent"/>
+  <int value="130" label="PrefixedAndUnprefixedAnimationEndEvent"/>
+  <int value="131" label="PrefixedAnimationStartEvent"/>
+  <int value="132" label="UnprefixedAnimationStartEvent"/>
+  <int value="133" label="PrefixedAndUnprefixedAnimationStartEvent"/>
+  <int value="134" label="PrefixedAnimationIterationEvent"/>
+  <int value="135" label="UnprefixedAnimationIterationEvent"/>
+  <int value="136" label="PrefixedAndUnprefixedAnimationIterationEvent"/>
+  <int value="137" label="EventReturnValue"/>
+  <int value="138" label="SVGSVGElement"/>
+  <int value="139" label="SVGAnimateColorElement"/>
+  <int value="140" label="InsertAdjacentText"/>
+  <int value="141" label="InsertAdjacentElement"/>
+  <int value="142" label="HasAttributes"/>
+  <int value="143" label="DOMSubtreeModifiedEvent"/>
+  <int value="144" label="DOMNodeInsertedEvent"/>
+  <int value="145" label="DOMNodeRemovedEvent"/>
+  <int value="146" label="DOMNodeRemovedFromDocumentEvent"/>
+  <int value="147" label="DOMNodeInsertedIntoDocumentEvent"/>
+  <int value="148" label="DOMCharacterDataModifiedEvent"/>
+  <int value="149" label="DocumentAllTags"/>
+  <int value="150" label="DocumentAllLegacyCall"/>
+  <int value="151" label="HTMLAppletElementLegacyCall"/>
+  <int value="152" label="HTMLEmbedElementLegacyCall"/>
+  <int value="153" label="HTMLObjectElementLegacyCall"/>
 </enum>
 
 <enum name="FFmpegCodecs" type="int">
@@ -23633,6 +23856,9 @@ other types of suffix sets.
   <int value="432" label="animation-timing-function"/>
   <int value="433" label="object-fit"/>
   <int value="434" label="paint-order"/>
+  <int value="435" label="mask-source-type"/>
+  <int value="436" label="isolation"/>
+  <int value="437" label="object-position"/>
 </enum>
 
 <enum name="MediaContainers" type="int">

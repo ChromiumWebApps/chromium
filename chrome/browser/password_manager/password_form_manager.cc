@@ -359,6 +359,9 @@ void PasswordFormManager::OnRequestDone(
       best_matches_[it->username_value] = new PasswordForm(*it);
   }
 
+  UMA_HISTOGRAM_COUNTS("PasswordManager.NumPasswordsNotShown",
+                       logins_result.size() - best_matches_.size());
+
   // It is possible we have at least one match but have no preferred_match_,
   // because a user may have chosen to 'Forget' the preferred match. So we
   // just pick the first one and whichever the user selects for submit will
@@ -577,7 +580,13 @@ void PasswordFormManager::CheckForAccountCreationForm(
   if (pending.times_used == 1) {
     FormStructure pending_structure(pending.form_data);
     FormStructure observed_structure(observed.form_data);
-    if (pending_structure.FormSignature() !=
+    // Ignore |pending_structure| if its FormData has no fields. This is to
+    // weed out those credentials that were saved before FormData was added
+    // to PasswordForm. Even without this check, these FormStructure's won't
+    // be uploaded, but it makes it hard to see if we are encountering
+    // unexpected errors.
+    if (!pending.form_data.fields.empty() &&
+        pending_structure.FormSignature() !=
             observed_structure.FormSignature()) {
       autofill::AutofillDriverImpl* driver =
           autofill::AutofillDriverImpl::FromWebContents(web_contents_);
