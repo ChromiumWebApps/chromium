@@ -170,6 +170,7 @@
 #endif
 
 #if defined(OS_ANDROID)
+#include "chrome/browser/ui/webui/ntp/android/partner_bookmarks_shim.h"
 #include "chrome/browser/ui/webui/ntp/android/promo_handler.h"
 #else
 #include "chrome/browser/profile_resetter/automatic_profile_resetter_factory.h"
@@ -262,6 +263,10 @@ void RegisterLocalState(PrefRegistrySimple* registry) {
 #if defined(ENABLE_TASK_MANAGER)
   TaskManager::RegisterPrefs(registry);
 #endif  // defined(ENABLE_TASK_MANAGER)
+
+#if defined(ENABLE_AUTOFILL_DIALOG)
+  autofill::AutofillDialogController::RegisterPrefs(registry);
+#endif
 
 #if defined(TOOLKIT_VIEWS)
   RegisterBrowserViewPrefs(registry);
@@ -394,6 +399,7 @@ void RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
 #endif
 
 #if defined(OS_ANDROID)
+  PartnerBookmarksShim::RegisterProfilePrefs(registry);
   PromoHandler::RegisterProfilePrefs(registry);
 #endif
 

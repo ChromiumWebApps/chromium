@@ -594,7 +594,7 @@ void HandleSingleTabModeBlockOnUIThread(const BlockedWindowParams& params) {
   SingleTabModeTabHelper::FromWebContents(web_contents)->HandleOpenUrl(params);
 }
 
-float GetFontScaleMultiplier() {
+float GetDeviceScaleAdjustment() {
   static const float kMinFSM = 1.05f;
   static const int kWidthForMinFSM = 320;
   static const float kMaxFSM = 1.3f;
@@ -1441,12 +1441,8 @@ void ChromeContentBrowserClient::AppendExtraCommandLineSwitches(
           extensions::ExtensionSystem::Get(profile)->extension_service();
       if (extension_service) {
         extensions::ProcessMap* process_map = extension_service->process_map();
-        if (process_map && process_map->Contains(process->GetID())) {
+        if (process_map && process_map->Contains(process->GetID()))
           command_line->AppendSwitch(switches::kExtensionProcess);
-#if defined(OS_WIN) && defined(USE_AURA)
-          command_line->AppendSwitch(switches::kDisableGpuCompositing);
-#endif
-        }
       }
 
       PrefService* prefs = profile->GetPrefs();
@@ -2229,9 +2225,9 @@ void ChromeContentBrowserClient::OverrideWebkitPrefs(
   web_prefs->allow_running_insecure_content =
       prefs->GetBoolean(prefs::kWebKitAllowRunningInsecureContent);
 #if defined(OS_ANDROID)
-  web_prefs->text_autosizing_font_scale_factor =
-      static_cast<float>(prefs->GetDouble(prefs::kWebKitFontScaleFactor)) *
-      GetFontScaleMultiplier();
+  web_prefs->font_scale_factor =
+      static_cast<float>(prefs->GetDouble(prefs::kWebKitFontScaleFactor));
+  web_prefs->device_scale_adjustment = GetDeviceScaleAdjustment();
   web_prefs->force_enable_zoom =
       prefs->GetBoolean(prefs::kWebKitForceEnableZoom);
 #endif

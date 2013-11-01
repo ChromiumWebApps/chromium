@@ -349,6 +349,7 @@ extern const char kPerHostZoomLevels[];
 extern const char kAutofillDialogAutofillDefault[];
 extern const char kAutofillDialogHasPaidWithWallet[];
 extern const char kAutofillDialogPayWithoutWallet[];
+extern const char kAutofillDialogWalletLocationAcceptance[];
 extern const char kAutofillDialogShowCount[];
 extern const char kAutofillDialogSaveData[];
 extern const char kAutofillGeneratedCardBubbleTimesShown[];
@@ -925,6 +926,10 @@ extern const char kWatchdogExtensionActive[];
 extern const char kProfilePreferenceHashes[];
 
 extern const char kNetworkTimeMapping[];
+
+#if defined(OS_ANDROID)
+extern const char kPartnerBookmarkMappings[];
+#endif
 
 }  // namespace prefs
 

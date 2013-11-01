@@ -495,6 +495,11 @@ const char kDisableTLSChannelID[]           = "disable-tls-channel-id";
 // webcams and microphones, especially on non-HTTPS pages.
 const char kDisableUserMediaSecurity[]      = "disable-user-media-security";
 
+// Do not expose WebGL extension WEBGL_debug_renderer_info to unprivileged code
+// in the browser.
+const char kDisableWebGLDebugRendererInfo[] =
+    "disable-webgl-debug-renderer-info";
+
 // Disables the backend service for web resources.
 const char kDisableWebResources[]           = "disable-web-resources";
 
@@ -684,7 +689,7 @@ const char kEnableOmniboxAutoCompletionForIme[] =
 const char kEnablePanels[]                  = "enable-panels";
 
 // Enables searching for people from the apps list search box.
-const char kDisablePeopleSearch[]           = "disable-people-search";
+const char kEnablePeopleSearch[]            = "enable-people-search";
 
 // Disables the usage of Portable Native Client.
 const char kDisablePnacl[]                  = "disable-pnacl";

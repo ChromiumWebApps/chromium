@@ -507,7 +507,7 @@ const char kUrlWhitelist[] = "policy.url_whitelist";
 const char kLastPolicyCheckTime[] = "policy.last_policy_check_time";
 
 // A list of bookmarks to include in a Managed Bookmarks root node. Each
-// list item is a dictionary containig a "name" and an "url" entry, detailing
+// list item is a dictionary containing a "name" and an "url" entry, detailing
 // the bookmark name and target URL respectively.
 const char kManagedBookmarks[] = "policy.managed_bookmarks";
 #endif
@@ -1082,6 +1082,11 @@ const char kAutofillDialogHasPaidWithWallet[] = "autofill.has_paid_with_wallet";
 // the autofill dialog's account chooser and set explicitly on dialog submission
 // (but not cancel). If this isn't set, the dialog assumes it's the first run.
 const char kAutofillDialogPayWithoutWallet[] = "autofill.pay_without_wallet";
+
+// Which GAIA users have accepted that use of Google Wallet implies their
+// location will be shared with fraud protection services.
+const char kAutofillDialogWalletLocationAcceptance[] =
+    "autofill.wallet_location_disclosure";
 
 // The number of times the dialog has been shown (all time).
 const char kAutofillDialogShowCount[] = "autofill.show_count";
@@ -2589,5 +2594,14 @@ const char kProfilePreferenceHashes[] = "profile.preference_hashes";
 // Stores a pair of local time and corresponding network time to bootstrap
 // network time tracker when browser starts.
 const char kNetworkTimeMapping[] = "profile.network_time_mapping";
+
+#if defined(OS_ANDROID)
+// A list of partner bookmark rename/remove mappings.
+// Each list item is a dictionary containing a "url", a "provider_title" and
+// "mapped_title" entries, detailing the bookmark target URL (if any), the title
+// given by the PartnerBookmarksProvider and either the user-visible renamed
+// title or an empty string if the bookmark node was removed.
+const char kPartnerBookmarkMappings[] = "partnerbookmarks.mappings";
+#endif
 
 }  // namespace prefs
