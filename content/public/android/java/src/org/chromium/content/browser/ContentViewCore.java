@@ -1419,6 +1419,11 @@ public class ContentViewCore
         }
     }
 
+    @VisibleForTesting
+    public void sendDoubleTapForTest(long timeMs, int x, int y, Bundle b) {
+        sendGesture(ContentViewGestureHandler.GESTURE_DOUBLE_TAP, timeMs, x, y, b);
+    }
+
     @Override
     public void sendSingleTapUMA(int type) {
         if (mNativeContentViewCore == 0) return;
@@ -3218,12 +3223,12 @@ public class ContentViewCore
 
     @CalledByNative
     private ContentVideoViewClient getContentVideoViewClient() {
-        return mContentViewClient.getContentVideoViewClient();
+        return getContentViewClient().getContentVideoViewClient();
     }
 
     @CalledByNative
     private boolean shouldBlockMediaRequest(String url) {
-        return mContentViewClient.shouldBlockMediaRequest(url);
+        return getContentViewClient().shouldBlockMediaRequest(url);
     }
 
     private native void nativeOnJavaContentViewCoreDestroyed(int nativeContentViewCoreImpl);
