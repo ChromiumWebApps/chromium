@@ -194,7 +194,8 @@ TEST_F(WidgetTest, DesktopNativeWidgetAuraActivationAndFocusTest) {
   widget2.Show();
   aura::Window* root_window2 = widget2.GetNativeView()->GetRootWindow();
   contents_view2->RequestFocus();
-  ::SetActiveWindow(root_window2->GetDispatcher()->GetAcceleratedWidget());
+  ::SetActiveWindow(
+      root_window2->GetDispatcher()->host()->GetAcceleratedWidget());
 
   aura::client::ActivationClient* activation_client2 =
       aura::client::GetActivationClient(root_window2);
@@ -206,7 +207,8 @@ TEST_F(WidgetTest, DesktopNativeWidgetAuraActivationAndFocusTest) {
   // Now set focus back to widget 1 and expect the active window to be its
   // window.
   contents_view1->RequestFocus();
-  ::SetActiveWindow(root_window1->GetDispatcher()->GetAcceleratedWidget());
+  ::SetActiveWindow(
+      root_window1->GetDispatcher()->host()->GetAcceleratedWidget());
   EXPECT_EQ(activation_client2->GetActiveWindow(),
             reinterpret_cast<aura::Window*>(NULL));
   EXPECT_EQ(activation_client1->GetActiveWindow(), widget1.GetNativeView());
@@ -510,15 +512,17 @@ TEST_F(WidgetTest, WidgetNotActivatedOnFakeActivationMessages) {
 // Provides functionality to create a window modal dialog.
 class ModalDialogDelegate : public DialogDelegateView {
  public:
-  ModalDialogDelegate() {}
+  explicit ModalDialogDelegate(ui::ModalType type) : type_(type) {}
   virtual ~ModalDialogDelegate() {}
 
   // WidgetDelegate overrides.
   virtual ui::ModalType GetModalType() const OVERRIDE {
-    return ui::MODAL_TYPE_WINDOW;
+    return type_;
   }
 
  private:
+  ui::ModalType type_;
+
   DISALLOW_COPY_AND_ASSIGN(ModalDialogDelegate);
 };
 
@@ -544,7 +548,8 @@ TEST_F(WidgetTest, WindowModalWindowDestroyedActivationTest) {
 
   // Create a modal dialog.
   // This instance will be destroyed when the dialog is destroyed.
-  ModalDialogDelegate* dialog_delegate = new ModalDialogDelegate;
+  ModalDialogDelegate* dialog_delegate =
+      new ModalDialogDelegate(ui::MODAL_TYPE_WINDOW);
 
   Widget* modal_dialog_widget = views::DialogDelegate::CreateDialogWidget(
       dialog_delegate, NULL, top_level_widget.GetNativeWindow());
@@ -559,6 +564,44 @@ TEST_F(WidgetTest, WindowModalWindowDestroyedActivationTest) {
                 top_level_window)->GetFocusedWindow());
   top_level_widget.CloseNow();
 }
+
+// Test that when opening a system-modal window, capture is released.
+TEST_F(WidgetTest, SystemModalWindowReleasesCapture) {
+  // Create a top level widget.
+  Widget top_level_widget;
+  Widget::InitParams init_params =
+      CreateParams(Widget::InitParams::TYPE_WINDOW);
+  init_params.show_state = ui::SHOW_STATE_NORMAL;
+  gfx::Rect initial_bounds(0, 0, 500, 500);
+  init_params.bounds = initial_bounds;
+  init_params.ownership = Widget::InitParams::WIDGET_OWNS_NATIVE_WIDGET;
+  init_params.native_widget = new DesktopNativeWidgetAura(&top_level_widget);
+  top_level_widget.Init(init_params);
+  top_level_widget.Show();
+
+  aura::Window* top_level_window = top_level_widget.GetNativeWindow();
+  EXPECT_EQ(top_level_window, aura::client::GetFocusClient(
+                top_level_window)->GetFocusedWindow());
+
+  EXPECT_FALSE(top_level_window->HasCapture());
+  top_level_window->SetCapture();
+  EXPECT_TRUE(top_level_window->HasCapture());
+
+  // Create a modal dialog.
+  ModalDialogDelegate* dialog_delegate =
+      new ModalDialogDelegate(ui::MODAL_TYPE_SYSTEM);
+
+  Widget* modal_dialog_widget = views::DialogDelegate::CreateDialogWidget(
+      dialog_delegate, NULL, top_level_widget.GetNativeWindow());
+  modal_dialog_widget->SetBounds(gfx::Rect(100, 100, 200, 200));
+  modal_dialog_widget->Show();
+
+  EXPECT_FALSE(top_level_window->HasCapture());
+
+  modal_dialog_widget->CloseNow();
+  top_level_widget.CloseNow();
+}
+
 #endif
 
 namespace {
