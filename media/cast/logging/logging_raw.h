@@ -31,24 +31,24 @@ class LoggingRaw : public base::NonThreadSafe,
   // Frame events can be inserted with different parameters.
   void InsertFrameEvent(CastLoggingEvent event,
                         uint32 rtp_timestamp,
-                        uint8 frame_id);
+                        uint32 frame_id);
 
   // Size - Inserting the size implies that this is an encoded frame.
   void InsertFrameEventWithSize(CastLoggingEvent event,
                                 uint32 rtp_timestamp,
-                                uint8 frame_id,
+                                uint32 frame_id,
                                 int frame_size);
 
   // Render/playout delay
   void InsertFrameEventWithDelay(CastLoggingEvent event,
                                  uint32 rtp_timestamp,
-                                 uint8 frame_id,
+                                 uint32 frame_id,
                                  base::TimeDelta delay);
 
   // Insert a packet event.
   void InsertPacketEvent(CastLoggingEvent event,
                          uint32 rtp_timestamp,
-                         uint8 frame_id,
+                         uint32 frame_id,
                          uint16 packet_id,
                          uint16 max_packet_id,
                          int size);
@@ -66,7 +66,7 @@ class LoggingRaw : public base::NonThreadSafe,
 
  private:
   void InsertBaseFrameEvent(CastLoggingEvent event,
-                            uint8 frame_id,
+                            uint32 frame_id,
                             uint32 rtp_timestamp);
 
   base::WeakPtrFactory<LoggingRaw> weak_factory_;

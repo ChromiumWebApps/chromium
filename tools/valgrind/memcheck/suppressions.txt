@@ -712,27 +712,6 @@
    fun:_ZN19WebSharedWorkerStub9OnConnectEii
 }
 {
-   bug_27838
-   Memcheck:Leak
-   fun:malloc
-   fun:_ZN3WTF10fastMallocEj
-   fun:_ZN3WTF13FastAllocBasenwEj
-   fun:_ZN7WebCore18MessagePortChannel6createEN3WTF10PassRefPtrINS_26PlatformMessagePortChannelEEE
-   fun:_ZN5blink19WebSharedWorkerImpl7connectEPNS_21WebMessagePortChannelEPNS_15WebSharedWorker15ConnectListenerE
-   fun:_ZN19WebSharedWorkerStub9OnConnectEii
-}
-{
-   bug_28200
-   Memcheck:Leak
-   fun:malloc
-   fun:malloc
-   fun:_ZN3WTF10fastMallocEj
-   fun:_ZN3WTF13FastAllocBasenwEj
-   fun:_ZN7WebCore18MessagePortChannel6createEN3WTF10PassRefPtrINS_26PlatformMessagePortChannelEEE
-   fun:_ZN5blink19WebSharedWorkerImpl7connectEPNS_21WebMessagePortChannelEPNS_15WebSharedWorker15ConnectListenerE
-   fun:_ZN19WebSharedWorkerStub9OnConnectEii
-}
-{
    # GTK tooltip doesn't always initialize variables.
    # https://bugzilla.gnome.org/show_bug.cgi?id=554686
    tooltip_554686
@@ -6423,18 +6402,4 @@
    fun:_ZN5media20AudioOutputResampler10OpenStreamEv
    fun:_ZN5media16AudioOutputProxy4OpenEv
    fun:_ZN5media18AudioStreamHandler20AudioStreamContainer4PlayEv
-}
-{
-  bug_319242_a
-  Memcheck:Uninitialized
-  fun:_ZN7testing8internal11TuplePrefixILm2EE7Matches*
-  ...
-  fun:_ZN5media16AesDecryptorTest8KeyErrorEjNS_9MediaKeys8KeyErrorEi
-}
-{
-  bug_319242_b
-  Memcheck:Uninitialized
-  fun:_ZNK7testing8internal16TypedExpectationIFvjEE7Matches*
-  ...
-  fun:_ZN5media16AesDecryptorTest8KeyAddedEj
 }

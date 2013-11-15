@@ -572,10 +572,9 @@ class CONTENT_EXPORT WebContentsImpl
   WebContentsImpl(BrowserContext* browser_context,
                   WebContentsImpl* opener);
 
-  // Add and remove observers for page navigation notifications. Adding or
-  // removing multiple times has no effect. The order in which notifications
-  // are sent to observers is undefined. Clients must be sure to remove the
-  // observer before they go away.
+  // Add and remove observers for page navigation notifications. The order in
+  // which notifications are sent to observers is undefined. Clients must be
+  // sure to remove the observer before they go away.
   void AddObserver(WebContentsObserver* observer);
   void RemoveObserver(WebContentsObserver* observer);
 
@@ -760,6 +759,10 @@ class CONTENT_EXPORT WebContentsImpl
 
   void SetEncoding(const std::string& encoding);
 
+  // TODO(creis): This should take in a FrameTreeNode to know which node's
+  // render manager to return.  For now, we just return the root's.
+  RenderViewHostManager* GetRenderManager() const;
+
   RenderViewHostImpl* GetRenderViewHostImpl();
 
   // Removes browser plugin embedder if there is one.
@@ -811,7 +814,7 @@ class CONTENT_EXPORT WebContentsImpl
   DestructionObservers destruction_observers_;
 
   // A list of observers notified when page state changes. Weak references.
-  // This MUST be listed above render_manager_ since at destruction time the
+  // This MUST be listed above frame_tree_ since at destruction time the
   // latter might cause RenderViewHost's destructor to call us and we might use
   // the observer list then.
   ObserverList<WebContentsObserver> observers_;
@@ -833,10 +836,7 @@ class CONTENT_EXPORT WebContentsImpl
       PowerSaveBlockerMap;
   PowerSaveBlockerMap power_save_blockers_;
 
-  // Manages creation and swapping of render views.
-  RenderViewHostManager render_manager_;
-
-  // The frame tree structure of the current page.
+  // Manages the frame tree of the page and process swaps in each node.
   FrameTree frame_tree_;
 
 #if defined(OS_ANDROID)

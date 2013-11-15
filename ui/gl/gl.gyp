@@ -114,8 +114,8 @@
         'scoped_binders.h',
         'scoped_make_current.cc',
         'scoped_make_current.h',
-        'vsync_provider.cc',
-        'vsync_provider.h',
+        'sync_control_vsync_provider.cc',
+        'sync_control_vsync_provider.h',
         '<(gl_binding_output_dir)/gl_bindings_autogen_gl.cc',
         '<(gl_binding_output_dir)/gl_bindings_autogen_gl.h',
         '<(gl_binding_output_dir)/gl_bindings_autogen_mock.cc',
@@ -346,8 +346,8 @@
             'surface_jni_headers',
           ],
           'sources': [
-            '../android/java/src/org/chromium/ui/gfx/SurfaceTexturePlatformWrapper.java',
-            '../android/java/src/org/chromium/ui/gfx/SurfaceTextureListener.java',
+            '../android/java/src/org/chromium/ui/gl/SurfaceTexturePlatformWrapper.java',
+            '../android/java/src/org/chromium/ui/gl/SurfaceTextureListener.java',
           ],
           'variables': {
             'jni_gen_package': 'ui/gl',

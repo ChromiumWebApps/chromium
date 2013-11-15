@@ -68,9 +68,9 @@ import org.chromium.content.browser.input.InsertionHandleController;
 import org.chromium.content.browser.input.SelectPopupDialog;
 import org.chromium.content.browser.input.SelectionHandleController;
 import org.chromium.content.common.TraceEvent;
-import org.chromium.ui.ViewAndroid;
-import org.chromium.ui.ViewAndroidDelegate;
-import org.chromium.ui.WindowAndroid;
+import org.chromium.ui.base.ViewAndroidDelegate;
+import org.chromium.ui.base.ViewAndroid;
+import org.chromium.ui.base.WindowAndroid;
 import org.chromium.ui.gfx.DeviceDisplayInfo;
 
 import java.lang.annotation.Annotation;
@@ -1417,6 +1417,11 @@ public class ContentViewCore
             default:
                 return false;
         }
+    }
+
+    @VisibleForTesting
+    public void sendDoubleTapForTest(long timeMs, int x, int y, Bundle b) {
+        sendGesture(ContentViewGestureHandler.GESTURE_DOUBLE_TAP, timeMs, x, y, b);
     }
 
     @Override
@@ -3218,12 +3223,12 @@ public class ContentViewCore
 
     @CalledByNative
     private ContentVideoViewClient getContentVideoViewClient() {
-        return mContentViewClient.getContentVideoViewClient();
+        return getContentViewClient().getContentVideoViewClient();
     }
 
     @CalledByNative
     private boolean shouldBlockMediaRequest(String url) {
-        return mContentViewClient.shouldBlockMediaRequest(url);
+        return getContentViewClient().shouldBlockMediaRequest(url);
     }
 
     private native void nativeOnJavaContentViewCoreDestroyed(int nativeContentViewCoreImpl);

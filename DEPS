@@ -19,7 +19,7 @@ vars = {
   "sourceforge_url": "http://svn.code.sf.net/p/%(repo)s/code",
   "webkit_trunk": "http://src.chromium.org/blink/trunk",
   "nacl_trunk": "http://src.chromium.org/native_client/trunk",
-  "webkit_revision": "161994",
+  "webkit_revision": "162075",
   "chromium_git": "https://chromium.googlesource.com",
   "chromiumos_git": "https://chromium.googlesource.com/chromiumos",
   "skia_git": "https://skia.googlesource.com",
@@ -44,16 +44,16 @@ vars = {
 
   "sfntly_revision": "228",
   "lighttpd_revision": "33737",
-  "skia_revision": "12282",
-  "skia_hash": "94f689afde8866d34a4ebd7515b298559f697e3b",
+  "skia_revision": "12299",
+  "skia_hash": "139a2359abdeedca1ff836aa24c1a6943d9274f8",
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling Skia
   # and V8 without interference from each other.
-  "v8_revision": "17730",
+  "v8_revision": "17777",
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling WebRTC
   # and V8 without interference from each other.
-  "webrtc_revision": "5104",
+  "webrtc_revision": "5122",
   "jsoncpp_revision": "248",
   "nss_revision": "234862",
   # Three lines of non-changing comments so that
@@ -254,7 +254,7 @@ deps = {
     "/trunk/tools/deps2git@234015",
 
   "src/third_party/webpagereplay":
-    (Var("googlecode_url") % "web-page-replay") + "/trunk@525",
+    (Var("googlecode_url") % "web-page-replay") + "/trunk@528",
 
   "src/third_party/pywebsocket/src":
     (Var("googlecode_url") % "pywebsocket") + "/trunk/src@662",

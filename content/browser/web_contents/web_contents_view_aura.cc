@@ -754,6 +754,15 @@ class WebContentsViewAura::WindowObserver
     // Windows, unregister first so that the debug check doesn't fire.
     if (parent && parent == window->GetRootWindow())
       parent->RemoveObserver(this);
+
+    // We need to undo the above if we were parented to the root window and then
+    // got parented to another window. At that point, the code before the ifdef
+    // would have stopped watching the root window.
+    if (window->GetRootWindow() &&
+        parent != window->GetRootWindow() &&
+        !window->GetRootWindow()->HasObserver(this)) {
+      window->GetRootWindow()->AddObserver(this);
+    }
 #endif
 
     parent_ = parent;
@@ -789,7 +798,8 @@ class WebContentsViewAura::WindowObserver
     if (window == view_->window_) {
       window->GetDispatcher()->AddRootWindowObserver(this);
 #if defined(OS_WIN)
-      window->GetRootWindow()->AddObserver(this);
+      if (!window->GetRootWindow()->HasObserver(this))
+        window->GetRootWindow()->AddObserver(this);
 #endif
     }
   }
@@ -799,6 +809,13 @@ class WebContentsViewAura::WindowObserver
       window->GetDispatcher()->RemoveRootWindowObserver(this);
 #if defined(OS_WIN)
       window->GetRootWindow()->RemoveObserver(this);
+
+      const aura::Window::Windows& root_children =
+          window->GetRootWindow()->children();
+      for (size_t i = 0; i < root_children.size(); ++i) {
+        if (root_children[i] != view_->window_ && root_children[i] != parent_)
+          root_children[i]->RemoveObserver(this);
+      }
 #endif
     }
   }

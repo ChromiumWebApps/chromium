@@ -270,7 +270,7 @@ bool AppWindowCreateFunction::RunImpl() {
       create_params.resizable = *options->resizable.get();
 
     if (options->always_on_top.get() &&
-        GetExtension()->HasAPIPermission(APIPermission::kAlwaysOnTopWindows))
+        GetCurrentChannel() <= chrome::VersionInfo::CHANNEL_DEV)
       create_params.always_on_top = *options->always_on_top.get();
 
     if (options->type != extensions::api::app_window::WINDOW_TYPE_PANEL) {

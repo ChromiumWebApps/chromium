@@ -48,7 +48,6 @@
         'browser/android/bookmarks/partner_bookmarks_shim_unittest.cc',
         'browser/android/mock_google_location_settings_helper.cc',
         'browser/android/mock_google_location_settings_helper.h',
-        'browser/android/tab_android_test_stubs.cc',
         'browser/bookmarks/bookmark_test_helpers.cc',
         'browser/bookmarks/bookmark_test_helpers.h',
         'browser/browsing_data/mock_browsing_data_appcache_helper.cc',
@@ -541,6 +540,7 @@
         '../extensions/common/matcher/url_matcher_unittest.cc',
         '../extensions/common/one_shot_event_unittest.cc',
         '../extensions/common/permissions/api_permission_set_unittest.cc',
+        '../extensions/common/permissions/manifest_permission_set_unittest.cc',
         '../extensions/common/url_pattern_set_unittest.cc',
         '../extensions/common/url_pattern_unittest.cc',
         '../extensions/common/user_script_unittest.cc',
@@ -812,8 +812,8 @@
         'browser/extensions/api/cookies/cookies_unittest.cc',
         'browser/extensions/api/declarative/declarative_rule_unittest.cc',
         'browser/extensions/api/declarative/deduping_factory_unittest.cc',
-        'browser/extensions/api/declarative/initializing_rules_registry_unittest.cc',
         'browser/extensions/api/declarative/rules_registry_service_unittest.cc',
+        'browser/extensions/api/declarative/rules_registry_unittest.cc',
         'browser/extensions/api/declarative/rules_registry_with_cache_unittest.cc',
         'browser/extensions/api/declarative_content/content_action_unittest.cc',
         'browser/extensions/api/declarative_content/content_condition_unittest.cc',
@@ -903,6 +903,7 @@
         'browser/extensions/extension_warning_badge_service_unittest.cc',
         'browser/extensions/extension_warning_service_unittest.cc',
         'browser/extensions/external_policy_loader_unittest.cc',
+        'browser/extensions/external_provider_impl_unittest.cc',
         'browser/extensions/external_provider_impl_chromeos_unittest.cc',
         'browser/extensions/image_loader_unittest.cc',
         'browser/extensions/management_policy_unittest.cc',
@@ -1390,6 +1391,7 @@
         'browser/sync_file_system/drive_backend/drive_backend_test_util.cc',
         'browser/sync_file_system/drive_backend/drive_backend_test_util.h',
         'browser/sync_file_system/drive_backend/sync_engine_initializer_unittest.cc',
+        'browser/sync_file_system/drive_backend/sync_engine_unittest.cc',
         'browser/sync_file_system/drive_backend/drive_backend_test_util.cc',
         'browser/sync_file_system/drive_backend/drive_backend_test_util.h',
         'browser/sync_file_system/fake_remote_change_processor.cc',
@@ -1799,6 +1801,7 @@
         'common/extensions/api/file_browser_handlers/file_browser_handler_manifest_unittest.cc',
         'common/extensions/api/i18n/default_locale_manifest_unittest.cc',
         'common/extensions/api/identity/extension_manifests_auth_unittest.cc',
+        'common/extensions/api/sockets/sockets_manifest_permission_unittest.cc',
         'common/extensions/api/storage/storage_schema_manifest_handler_unittest.cc',
         'common/extensions/command_unittest.cc',
         'common/extensions/csp_validator_unittest.cc',
@@ -2090,20 +2093,6 @@
             ['include', '^common/translate/language_detection_util_unittest\\.cc$'],
             ['include', '^common/translate/translate_util_unittest\\.cc$'],
             ['include', '^common/zip_'],
-          ],
-          'conditions': [
-            ['coverage != 0', {
-              'sources/': [
-                # These tests crash when run with coverage turned on due to an
-                # issue with llvm_gcda_increment_indirect_counter:
-                # http://crbug.com/156058
-                ['exclude', '^browser/autocomplete/bookmark_provider_unittest\\.cc$'],
-                ['exclude', '^browser/autocomplete/builtin_provider_unittest\\.cc$'],
-                ['exclude', '^browser/autocomplete/history_quick_provider_unittest\\.cc$'],
-                ['exclude', '^browser/autocomplete/shortcuts_provider_unittest\\.cc$'],
-                ['exclude', '^browser/bookmarks/bookmark_codec_unittest\\.cc$'],
-              ],
-            }],
           ],
           # Bundle all the necessary resources into the test bundle.
           'includes': ['chrome_ios_bundle_resources.gypi'],

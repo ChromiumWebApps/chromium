@@ -110,8 +110,8 @@ IN_PROC_BROWSER_TEST_F(PrintPreviewTest, WindowedNPAPIPluginHidden) {
 
   // Now get the region of the plugin before and after the print preview is
   // shown. They should be different.
-  HWND hwnd =
-      tab->GetView()->GetNativeView()->GetDispatcher()->GetAcceleratedWidget();
+  HWND hwnd = tab->GetView()->GetNativeView()->GetDispatcher()->host()->
+      GetAcceleratedWidget();
   HWND child = NULL;
   EnumChildWindows(hwnd, EnumerateChildren,reinterpret_cast<LPARAM>(&child));
 
@@ -140,6 +140,22 @@ IN_PROC_BROWSER_TEST_F(PrintPreviewTest, WindowedNPAPIPluginHidden) {
       region_before.right == region_after.right &&
       region_before.bottom == region_after.bottom;
   ASSERT_FALSE(rects_equal);
+}
+
+IN_PROC_BROWSER_TEST_F(PrintPreviewTest, NoCrashOnCloseWithOtherTabs) {
+  // Now print preview.
+  Print();
+
+  ui_test_utils::NavigateToURLWithDisposition(
+      browser(), GURL("about:blank"), NEW_FOREGROUND_TAB,
+      ui_test_utils::BROWSER_TEST_WAIT_FOR_NAVIGATION);
+
+  browser()->tab_strip_model()->ActivateTabAt(0, true);
+
+  // Navigate main tab to hide print preview.
+  ui_test_utils::NavigateToURL(browser(), GURL("about:blank"));
+
+  browser()->tab_strip_model()->ActivateTabAt(1, true);
 }
 #endif
 
