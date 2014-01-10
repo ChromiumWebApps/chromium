@@ -144,11 +144,11 @@ deps = {
     'src/tools/grit':
         Var('git_url') + '/external/grit-i18n.git@976a48583e8fb65888e9f660125231cee30eb04b',
     'src/tools/gyp':
-        Var('git_url') + '/external/gyp.git@fc18ffc05cce31c9315c07297e7605f0723bfc18',
+        Var('git_url') + '/external/gyp.git@325e405515a6018423a430b6f91be7b669589607',
     'src/tools/page_cycler/acid3':
         Var('git_url') + '/chromium/deps/acid3.git@6be0a66a1ebd7ebc5abc1b2f405a945f6d871521',
     'src/tools/swarming_client':
-        Var('git_url') + '/external/swarming.client.git@def5b803e9faf94885a53ffc92e3f71fe3ef0dac',
+        Var('git_url') + '/external/swarming.client.git@7124e396edf2801f23cf794bb1f08119c491ccf6',
     'src/v8':
         Var('git_url') + '/external/v8.git@4610c28af9f4355485f8115a725f320b80632804',
 }
@@ -185,7 +185,7 @@ deps_os = {
         'src/third_party/lss':
             Var('git_url') + '/external/linux-syscall-support/lss.git@e6c7682c40c27527894fbb8bcba38f77edbbb6b7',
         'src/third_party/openssl':
-            Var('git_url') + '/chromium/deps/openssl.git@f50952b0ae7fde883e66289d6629ee625f292df2',
+            Var('git_url') + '/chromium/deps/openssl.git@83c0f1514458cf987e7b971f77cc1a0c0971e66e',
     },
     'ios':
     {
@@ -318,7 +318,7 @@ deps_os = {
         'src/third_party/mtpd/source':
             Var('git_url') + '/chromiumos/platform/mtpd.git@5be739c938a0a229ba9479b00b180e1f9c843e81',
         'src/third_party/openssl':
-            Var('git_url') + '/chromium/deps/openssl.git@f50952b0ae7fde883e66289d6629ee625f292df2',
+            Var('git_url') + '/chromium/deps/openssl.git@83c0f1514458cf987e7b971f77cc1a0c0971e66e',
         'src/third_party/pyelftools':
             Var('git_url') + '/chromiumos/third_party/pyelftools.git@bdc1d380acd88d4bfaf47265008091483b0d614e',
         'src/third_party/swig/linux':

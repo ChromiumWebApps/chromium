@@ -62,7 +62,6 @@
 #include "chrome/browser/google/google_util.h"
 #include "chrome/browser/gpu/gl_string_manager.h"
 #include "chrome/browser/jankometer.h"
-#include "chrome/browser/language_usage_metrics.h"
 #include "chrome/browser/media/media_capture_devices_dispatcher.h"
 #include "chrome/browser/metrics/field_trial_synchronizer.h"
 #include "chrome/browser/metrics/metrics_log.h"
@@ -114,6 +113,7 @@
 #include "chrome/common/profile_management_switches.h"
 #include "chrome/common/profiling.h"
 #include "chrome/installer/util/google_update_settings.h"
+#include "components/language_usage_metrics/language_usage_metrics.h"
 #include "components/nacl/browser/nacl_browser.h"
 #include "components/nacl/browser/nacl_process_host.h"
 #include "components/startup_metric_utils/startup_metric_utils.h"
@@ -320,12 +320,12 @@ base::FilePath GetStartupProfilePath(const base::FilePath& user_data_dir,
       user_data_dir);
 }
 
-// Initializes the profile, possibly doing some user prompting to pick a
-// fallback profile. Returns the newly created profile, or NULL if startup
+// Initializes the primary profile, possibly doing some user prompting to pick
+// a fallback profile. Returns the newly created profile, or NULL if startup
 // should not continue.
-Profile* CreateProfile(const content::MainFunctionParams& parameters,
-                       const base::FilePath& user_data_dir,
-                       const CommandLine& parsed_command_line) {
+Profile* CreatePrimaryProfile(const content::MainFunctionParams& parameters,
+                              const base::FilePath& user_data_dir,
+                              const CommandLine& parsed_command_line) {
   TRACE_EVENT0("startup", "ChromeBrowserMainParts::CreateProfile")
   base::Time start = base::Time::Now();
   if (profiles::IsMultipleProfilesEnabled() &&
@@ -342,9 +342,12 @@ Profile* CreateProfile(const content::MainFunctionParams& parameters,
 
   Profile* profile = NULL;
 #if defined(OS_CHROMEOS)
-  // TODO(ivankr): http://crbug.com/83792
-  profile = g_browser_process->profile_manager()->GetDefaultProfile(
-      user_data_dir);
+  // On ChromeOS the ProfileManager will use the same path as the one we got
+  // passed. GetActiveUserProfile will therefore use the correct path
+  // automatically.
+  DCHECK_EQ(user_data_dir.value(),
+            g_browser_process->profile_manager()->user_data_dir().value());
+  profile = ProfileManager::GetActiveUserProfile();
 #else
   base::FilePath profile_path =
       GetStartupProfilePath(user_data_dir, parsed_command_line);
@@ -1223,7 +1226,9 @@ int ChromeBrowserMainParts::PreMainMessageLoopRunImpl() {
   // Profile creation ----------------------------------------------------------
 
   MetricsService::SetExecutionPhase(MetricsService::CREATE_PROFILE);
-  profile_ = CreateProfile(parameters(), user_data_dir_, parsed_command_line());
+  profile_ = CreatePrimaryProfile(parameters(),
+                                  user_data_dir_,
+                                  parsed_command_line());
   if (!profile_)
     return content::RESULT_CODE_NORMAL_EXIT;
 
@@ -1362,13 +1367,20 @@ int ChromeBrowserMainParts::PreMainMessageLoopRunImpl() {
   browser_process_->intranet_redirect_detector();
   GoogleSearchCounter::RegisterForNotifications();
 
-  // Disable SDCH filtering if switches::kEnableSdch is 0.
-  int sdch_enabled = 1;
   if (parsed_command_line().HasSwitch(switches::kEnableSdch)) {
-    base::StringToInt(parsed_command_line().GetSwitchValueASCII(
-        switches::kEnableSdch), &sdch_enabled);
-    if (!sdch_enabled)
-      net::SdchManager::EnableSdchSupport(false);
+    // SDCH options via switches::kEnableSdch include:
+    const int kSdchDisabled = 0;
+    const int kSdchOverHttpEnabled = 1;
+    const int kSdchOverBothHttpAndHttpsEnabled = 2;
+    int sdch_enabled = kSdchOverHttpEnabled;
+    if (base::StringToInt(parsed_command_line().GetSwitchValueASCII(
+            switches::kEnableSdch), &sdch_enabled)) {
+      if (sdch_enabled == kSdchDisabled) {
+        net::SdchManager::EnableSdchSupport(false);
+      } else if (sdch_enabled == kSdchOverBothHttpAndHttpsEnabled) {
+        net::SdchManager::EnableSecureSchemeSupport(true);
+      }
+    }
   }
 
   if (parsed_command_line().HasSwitch(switches::kEnableWatchdog))
@@ -1386,9 +1398,9 @@ int ChromeBrowserMainParts::PreMainMessageLoopRunImpl() {
   browser_process_->metrics_service()->RecordBreakpadHasDebugger(
       base::debug::BeingDebugged());
 
-  LanguageUsageMetrics::RecordAcceptLanguages(
+  language_usage_metrics::LanguageUsageMetrics::RecordAcceptLanguages(
       profile_->GetPrefs()->GetString(prefs::kAcceptLanguages));
-  LanguageUsageMetrics::RecordApplicationLanguage(
+  language_usage_metrics::LanguageUsageMetrics::RecordApplicationLanguage(
       browser_process_->GetApplicationLocale());
 
   // The extension service may be available at this point. If the command line

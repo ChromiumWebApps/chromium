@@ -323,13 +323,14 @@ void SendCompositorFrameAck(
   ack.gl_frame_data.reset(new cc::GLFrameData());
   DCHECK(!texture_to_produce.get() || !skip_frame);
   if (texture_to_produce.get()) {
+    GLHelper* gl_helper = ImageTransportFactory::GetInstance()->GetGLHelper();
     std::string mailbox_name = texture_to_produce->Produce();
     std::copy(mailbox_name.data(),
               mailbox_name.data() + mailbox_name.length(),
               reinterpret_cast<char*>(ack.gl_frame_data->mailbox.name));
     ack.gl_frame_data->size = texture_to_produce->size();
     ack.gl_frame_data->sync_point =
-        content::ImageTransportFactory::GetInstance()->InsertSyncPoint();
+        gl_helper ? gl_helper->InsertSyncPoint() : 0;
   } else if (skip_frame) {
     // Skip the frame, i.e. tell the producer to reuse the same buffer that
     // we just received.
@@ -351,9 +352,9 @@ void AcknowledgeBufferForGpu(
   uint32 sync_point = 0;
   DCHECK(!texture_to_produce.get() || !skip_frame);
   if (texture_to_produce.get()) {
+    GLHelper* gl_helper = ImageTransportFactory::GetInstance()->GetGLHelper();
     ack.mailbox_name = texture_to_produce->Produce();
-    sync_point =
-        content::ImageTransportFactory::GetInstance()->InsertSyncPoint();
+    sync_point = gl_helper ? gl_helper->InsertSyncPoint() : 0;
   } else if (skip_frame) {
     ack.mailbox_name = received_mailbox;
     ack.sync_point = 0;
@@ -726,6 +727,11 @@ scoped_ptr<ResizeLock> RenderWidgetHostViewAura::CreateResizeLock(
       base::TimeDelta::FromMilliseconds(kResizeLockTimeoutMs)));
 }
 
+void RenderWidgetHostViewAura::RequestCopyOfOutput(
+    scoped_ptr<cc::CopyOutputRequest> request) {
+  window_->layer()->RequestCopyOfOutput(request.Pass());
+}
+
 gfx::NativeView RenderWidgetHostViewAura::GetNativeView() const {
   return window_;
 }
@@ -1065,7 +1071,7 @@ void RenderWidgetHostViewAura::CopyFromCompositingSurface(
   gfx::Rect src_subrect_in_pixel =
       ConvertRectToPixel(current_device_scale_factor_, src_subrect);
   request->set_area(src_subrect_in_pixel);
-  window_->layer()->RequestCopyOfOutput(request.Pass());
+  RequestCopyOfOutput(request.Pass());
 }
 
 void RenderWidgetHostViewAura::CopyFromCompositingSurfaceToVideoFrame(
@@ -1087,6 +1093,8 @@ void RenderWidgetHostViewAura::CopyFromCompositingSurfaceToVideoFrame(
                    ImageTransportFactory::GetInstance()->GetGLHelper()) {
       subscriber_texture = new OwnedMailbox(helper);
     }
+    if (subscriber_texture.get())
+      active_frame_subscriber_textures_.insert(subscriber_texture.get());
   }
 
   scoped_ptr<cc::CopyOutputRequest> request =
@@ -1100,11 +1108,11 @@ void RenderWidgetHostViewAura::CopyFromCompositingSurfaceToVideoFrame(
   gfx::Rect src_subrect_in_pixel =
       ConvertRectToPixel(current_device_scale_factor_, src_subrect);
   request->set_area(src_subrect_in_pixel);
-  if (subscriber_texture) {
+  if (subscriber_texture.get()) {
     request->SetTextureMailbox(cc::TextureMailbox(
         subscriber_texture->mailbox(), subscriber_texture->sync_point()));
   }
-  window_->layer()->RequestCopyOfOutput(request.Pass());
+  RequestCopyOfOutput(request.Pass());
 }
 
 bool RenderWidgetHostViewAura::CanCopyToBitmap() const {
@@ -1639,8 +1647,8 @@ void RenderWidgetHostViewAura::OnSwapCompositorFrame(
     return;
   }
 
-  ImageTransportFactory* factory = ImageTransportFactory::GetInstance();
-  factory->WaitSyncPoint(frame->gl_frame_data->sync_point);
+  GLHelper* gl_helper = ImageTransportFactory::GetInstance()->GetGLHelper();
+  gl_helper->WaitSyncPoint(frame->gl_frame_data->sync_point);
 
   std::string mailbox_name(
       reinterpret_cast<const char*>(frame->gl_frame_data->mailbox.name),
@@ -1906,6 +1914,26 @@ void RenderWidgetHostViewAura::PrepareBitmapCopyOutputResult(
   callback.Run(true, bitmap);
 }
 
+// static
+void RenderWidgetHostViewAura::ReturnSubscriberTexture(
+    base::WeakPtr<RenderWidgetHostViewAura> rwhva,
+    scoped_refptr<OwnedMailbox> subscriber_texture,
+    uint32 sync_point) {
+  if (!subscriber_texture.get())
+    return;
+  if (!rwhva)
+    return;
+  DCHECK_NE(
+      rwhva->active_frame_subscriber_textures_.count(subscriber_texture.get()),
+      0u);
+
+  subscriber_texture->UpdateSyncPoint(sync_point);
+
+  rwhva->active_frame_subscriber_textures_.erase(subscriber_texture.get());
+  if (rwhva->frame_subscriber_ && subscriber_texture->texture_id())
+    rwhva->idle_frame_subscriber_textures_.push_back(subscriber_texture);
+}
+
 void RenderWidgetHostViewAura::CopyFromCompositingSurfaceFinishedForVideo(
     base::WeakPtr<RenderWidgetHostViewAura> rwhva,
     const base::Callback<void(bool)>& callback,
@@ -1917,17 +1945,12 @@ void RenderWidgetHostViewAura::CopyFromCompositingSurfaceFinishedForVideo(
   GLHelper* gl_helper = ImageTransportFactory::GetInstance()->GetGLHelper();
   uint32 sync_point = gl_helper ? gl_helper->InsertSyncPoint() : 0;
   if (release_callback) {
+    // A release callback means the texture came from the compositor, so there
+    // should be no |subscriber_texture|.
     DCHECK(!subscriber_texture);
     release_callback->Run(sync_point, false);
-  } else {
-    // If there's no release callback, then the texture is from
-    // idle_frame_subscriber_textures_ and we can put it back there.
-    DCHECK(subscriber_texture);
-    subscriber_texture->UpdateSyncPoint(sync_point);
-    if (rwhva && rwhva->frame_subscriber_ && subscriber_texture->texture_id())
-      rwhva->idle_frame_subscriber_textures_.push_back(subscriber_texture);
-    subscriber_texture = NULL;
   }
+  ReturnSubscriberTexture(rwhva, subscriber_texture, sync_point);
 }
 
 // static
@@ -1938,6 +1961,8 @@ void RenderWidgetHostViewAura::CopyFromCompositingSurfaceHasResultForVideo(
     const base::Callback<void(bool)>& callback,
     scoped_ptr<cc::CopyOutputResult> result) {
   base::ScopedClosureRunner scoped_callback_runner(base::Bind(callback, false));
+  base::ScopedClosureRunner scoped_return_subscriber_texture(
+      base::Bind(&ReturnSubscriberTexture, rwhva, subscriber_texture, 0));
 
   if (!rwhva)
     return;
@@ -1962,8 +1987,6 @@ void RenderWidgetHostViewAura::CopyFromCompositingSurfaceHasResultForVideo(
   if (region_in_frame.IsEmpty())
     return;
 
-  // We only handle texture readbacks for now. If the compositor is in software
-  // mode, we could produce a software-backed VideoFrame here as well.
   if (!result->HasTexture()) {
     DCHECK(result->HasBitmap());
     scoped_ptr<SkBitmap> bitmap = result->TakeBitmap();
@@ -1997,6 +2020,8 @@ void RenderWidgetHostViewAura::CopyFromCompositingSurfaceHasResultForVideo(
   ImageTransportFactory* factory = ImageTransportFactory::GetInstance();
   GLHelper* gl_helper = factory->GetGLHelper();
   if (!gl_helper)
+    return;
+  if (subscriber_texture.get() && !subscriber_texture->texture_id())
     return;
 
   cc::TextureMailbox texture_mailbox;
@@ -2042,6 +2067,7 @@ void RenderWidgetHostViewAura::CopyFromCompositingSurfaceHasResultForVideo(
   }
 
   ignore_result(scoped_callback_runner.Release());
+  ignore_result(scoped_return_subscriber_texture.Release());
   base::Callback<void(bool result)> finished_callback = base::Bind(
       &RenderWidgetHostViewAura::CopyFromCompositingSurfaceFinishedForVideo,
       rwhva->AsWeakPtr(),
@@ -3225,6 +3251,7 @@ void RenderWidgetHostViewAura::OnLostResources() {
   UpdateExternalTexture();
 
   idle_frame_subscriber_textures_.clear();
+  yuv_readback_pipeline_.reset();
 
   // Make sure all ImageTransportClients are deleted now that the context those
   // are using is becoming invalid. This sends pending ACKs and needs to happen
@@ -3276,6 +3303,16 @@ RenderWidgetHostViewAura::~RenderWidgetHostViewAura() {
 
   if (resource_collection_.get())
     resource_collection_->SetClient(NULL);
+
+  // An OwnedMailbox should not refer to the GLHelper anymore once the RWHVA is
+  // destroyed, as it may then outlive the GLHelper.
+  for (std::set<OwnedMailbox*>::iterator it =
+           active_frame_subscriber_textures_.begin();
+       it != active_frame_subscriber_textures_.end();
+       ++it) {
+    (*it)->Destroy();
+  }
+  active_frame_subscriber_textures_.clear();
 
 #if defined(OS_WIN)
   if (::IsWindow(plugin_parent_window_))
