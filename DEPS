@@ -22,7 +22,7 @@ vars = {
   "libcxxabi_revision": "753a30dd68ae008948d48f16bc942d5963fe65a1",
   "webkit_trunk": "http://src.chromium.org/blink/trunk",
   "nacl_trunk": "http://src.chromium.org/native_client/trunk",
-  "webkit_revision": "165816",
+  "webkit_revision": "165856",
   "chromium_git": "https://chromium.googlesource.com",
   "chromiumos_git": "https://chromium.googlesource.com/chromiumos",
   "skia_git": "https://skia.googlesource.com",
@@ -44,12 +44,12 @@ vars = {
 
   "sfntly_revision": "228",
   "lighttpd_revision": "33737",
-  "skia_revision": "13156",
-  "skia_hash": "f6f56878bc96386882721b15ba610984185d3dc9",
+  "skia_revision": "13188",
+  "skia_hash": "e8989578cd05d4bf6ebe35f0d49afbc3d3bef2ed",
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling Skia
   # and V8 without interference from each other.
-  "v8_revision": "18807",
+  "v8_revision": "18841",
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling WebRTC
   # and V8 without interference from each other.

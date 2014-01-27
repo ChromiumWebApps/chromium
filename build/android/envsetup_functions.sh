@@ -76,8 +76,7 @@ ${ANDROID_SDK_BUILD_TOOLS_VERSION}
   # http://crbug.com/142642
   export STRIP=$(echo ${ANDROID_TOOLCHAIN}/*-strip)
 
-  # The set of GYP_DEFINES to pass to gyp. Use 'readlink -e' on directories
-  # to canonicalize them (remove double '/', remove trailing '/', etc).
+  # The set of GYP_DEFINES to pass to gyp.
   DEFINES="OS=android"
   DEFINES+=" host_os=${host_os}"
 
@@ -99,24 +98,13 @@ ${ANDROID_SDK_BUILD_TOOLS_VERSION}
     DEFINES+=" use_goma=1 gomadir=$GOMA_DIR"
   fi
 
-  # The order file specifies the order of symbols in the .text section of the
-  # shared library, libchromeview.so.  The file is an order list of section
-  # names and the library is linked with option
-  # --section-ordering-file=<orderfile>. The order file is updated by profiling
-  # startup after compiling with the order_profiling=1 GYP_DEFINES flag.
-  ORDER_DEFINES="order_text_section=${CHROME_SRC}/orderfiles/orderfile.out"
-
   # The following defines will affect ARM code generation of both C/C++ compiler
   # and V8 mksnapshot.
   case "${TARGET_ARCH}" in
     "arm")
-      DEFINES+=" ${ORDER_DEFINES}"
       DEFINES+=" target_arch=arm"
       ;;
     "x86")
-    # TODO(tedbo): The ia32 build fails on ffmpeg, so we disable it here.
-      DEFINES+=" use_libffmpeg=0"
-
       host_arch=$(uname -m | sed -e \
         's/i.86/ia32/;s/x86_64/x64/;s/amd64/x64/;s/arm.*/arm/;s/i86pc/ia32/')
       DEFINES+=" host_arch=${host_arch}"
@@ -164,9 +152,6 @@ print_usage() {
 
 ################################################################################
 # Process command line options.
-# --target-arch=  Specifices target CPU architecture. Currently supported
-#                 architectures are "arm" (default), and "x86".
-# --help          Prints out help message.
 ################################################################################
 process_options() {
   host_os=$(uname -s | sed -e 's/Linux/linux/;s/Darwin/mac/')
@@ -199,16 +184,7 @@ process_options() {
 }
 
 ################################################################################
-# Initializes environment variables for NDK/SDK build. Only Android NDK Revision
-# 7 on Linux or Mac is offically supported. To run this script, the system
-# environment ANDROID_NDK_ROOT must be set to Android NDK's root path.  The
-# ANDROID_SDK_ROOT only needs to be set to override the default SDK which is in
-# the tree under $ROOT/src/third_party/android_tools/sdk.
-# To build Chromium for Android with NDK/SDK follow the steps below:
-#  > export ANDROID_NDK_ROOT=<android ndk root>
-#  > export ANDROID_SDK_ROOT=<android sdk root> # to override the default sdk
-#  > . build/android/envsetup.sh
-#  > make
+# Initializes environment variables for NDK/SDK build.
 ################################################################################
 sdk_build_init() {
 
@@ -266,8 +242,7 @@ ${ANDROID_SDK_BUILD_TOOLS_VERSION}"
 
 ################################################################################
 # To build WebView, we use the Android build system and build inside an Android
-# source tree. This method is called from non_sdk_build_init() and adds to the
-# settings specified there.
+# source tree.
 #############################################################################
 webview_build_init() {
   # Use the latest API in the AOSP prebuilts directory (change with AOSP roll).

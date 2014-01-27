@@ -13,7 +13,7 @@ var expectedVolume1 = {
   deviceLabel: 'drive_label1',
   isParentDevice: false,
   isReadOnly: false,
-  profile: {displayName: "", isCurrentProfile: true}
+  profile: {profileId: "", displayName: "", isCurrentProfile: true}
 };
 
 var expectedVolume2 = {
@@ -26,7 +26,7 @@ var expectedVolume2 = {
   deviceLabel: 'drive_label2',
   isParentDevice: true,
   isReadOnly: true,
-  profile: {displayName: "", isCurrentProfile: true}
+  profile: {profileId: "", displayName: "", isCurrentProfile: true}
 };
 
 var expectedVolume3 = {
@@ -39,15 +39,15 @@ var expectedVolume3 = {
   deviceLabel: 'drive_label3',
   isParentDevice: true,
   isReadOnly: false,
-  profile: {displayName: "", isCurrentProfile: true}
+  profile: {profileId: "", displayName: "", isCurrentProfile: true}
 };
 
 var expectedDownloadsVolume = {
-  volumeId: 'downloads:Downloads',
-  mountPath: '/Downloads',
+  volumeId: /^downloads:Downloads[^\/]*$/,
+  mountPath: /^\/Downloads[^\/]*$/,
   volumeType: 'downloads',
   isReadOnly: false,
-  profile: {displayName: "", isCurrentProfile: true}
+  profile: {profileId: "", displayName: "", isCurrentProfile: true}
 };
 
 var expectedDriveVolume = {
@@ -56,7 +56,7 @@ var expectedDriveVolume = {
   sourcePath: '/special/drive',
   volumeType: 'drive',
   isReadOnly: false,
-  profile: {displayName: "", isCurrentProfile: true}
+  profile: {profileId: "", displayName: "", isCurrentProfile: true}
 };
 
 var expectedArchiveVolume = {
@@ -65,7 +65,7 @@ var expectedArchiveVolume = {
   sourcePath: 'archive_path',
   volumeType: 'archive',
   isReadOnly: true,
-  profile: {displayName: "", isCurrentProfile: true}
+  profile: {profileId: "", displayName: "", isCurrentProfile: true}
 };
 
 // List of expected mount points.
@@ -82,7 +82,13 @@ var expectedVolumeList = [
 
 function validateObject(received, expected, name) {
   for (var key in expected) {
-    if (expected[key] instanceof Object) {
+    if (expected[key] instanceof RegExp) {
+      if (!expected[key].test(received[key])) {
+        console.warn('Expected "' + key + '" ' + name + ' property to match: ' +
+                     expected[key] + ', but got: "' + received[key] + '".');
+        return false;
+      }
+    } else if (expected[key] instanceof Object) {
       if (!validateObject(received[key], expected[key], name + "." + key))
         return false;
     } else if (received[key] != expected[key]) {

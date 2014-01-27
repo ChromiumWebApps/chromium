@@ -445,6 +445,9 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
     this.gearButton_.addEventListener('menushow',
         this.refreshRemainingSpace_.bind(this,
                                          false /* Without loading caption. */));
+    this.gearButton_.addEventListener(
+        'menushow',
+        this.updateVisitDesktopMenus_.bind(this));
     this.dialogDom_.querySelector('#gear-menu').menuItemSelector =
         'menuitem, hr';
     cr.ui.decorate(this.gearButton_, cr.ui.MenuButton);
@@ -1193,7 +1196,7 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
     if (event.reason == 'ERROR' &&
         event.error.code == util.FileOperationErrorType.FILESYSTEM_ERROR &&
         event.error.data.toDrive &&
-        event.error.data.code == FileError.QUOTA_EXCEEDED_ERR) {
+        event.error.data.name == util.FileError.QUOTA_EXCEEDED_ERR) {
       this.alert.showHtml(
           strf('DRIVE_SERVER_OUT_OF_SPACE_HEADER'),
           strf('DRIVE_SERVER_OUT_OF_SPACE_MESSAGE',
@@ -1222,6 +1225,9 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
 
     if (kind === util.EntryChangedKind.CREATED && FileType.isImage(entry)) {
       // Preload a thumbnail if the new copied entry an image.
+      var locationInfo = this.volumeManager_.getLocationInfo(entry);
+      if (!locationInfo)
+        return;
       this.metadataCache_.get(entry, 'thumbnail|drive', function(metadata) {
         var thumbnailLoader_ = new ThumbnailLoader(
             entry,
@@ -1229,7 +1235,7 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
             metadata,
             undefined,  // Media type.
             // TODO(mtomasz): Use Entry instead of paths.
-            PathUtil.isDriveBasedPath(entry.fullPath) ?
+            locationInfo.isDriveBased ?
                 ThumbnailLoader.UseEmbedded.USE_EMBEDDED :
                 ThumbnailLoader.UseEmbedded.NO_EMBEDDED,
             10);  // Very low priority.
@@ -1701,7 +1707,7 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
       return;
 
     var leadEntry = dm.getFileList().item(leadIndex);
-    if (this.renameInput_.currentEntry.fullPath != leadEntry.fullPath)
+    if (!util.isSameEntry(this.renameInput_.currentEntry, leadEntry))
       return;
 
     var leadListItem = this.findListItemForNode_(this.renameInput_);
@@ -2211,6 +2217,64 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
   };
 
   /**
+   * Update menus that move the window to the other profile's desktop.
+   * TODO(hirono): Add the GearMenu class and make it a member of the class.
+   * TODO(hirono): Handle the case where a profile is added while the menu is
+   *     opened.
+   * @private
+   */
+  FileManager.prototype.updateVisitDesktopMenus_ = function() {
+    var gearMenu = this.document_.querySelector('#gear-menu');
+    var separator =
+        this.document_.querySelector('#multi-profile-separator');
+
+    // Remove existing menu items.
+    var oldItems =
+        this.document_.querySelectorAll('#gear-menu .visit-desktop');
+    for (var i = 0; i < oldItems.length; i++) {
+      gearMenu.removeChild(oldItems[i]);
+    }
+    separator.hidden = true;
+
+    if (this.dialogType !== DialogType.FULL_PAGE)
+      return;
+
+    // Obtain the profile information.
+    chrome.fileBrowserPrivate.getProfiles(function(profiles,
+                                                   currentId,
+                                                   displayedId) {
+      // Check if the menus are needed or not.
+      var insertingPosition = separator.nextSibling;
+      if (profiles.length === 1 && profiles[0].profileId === displayedId)
+        return;
+
+      separator.hidden = false;
+      for (var i = 0; i < profiles.length; i++) {
+        var profile = profiles[i];
+        if (profile.profileId === displayedId)
+          continue;
+        var item = this.document_.createElement('menuitem');
+        cr.ui.MenuItem.decorate(item);
+        gearMenu.insertBefore(item, insertingPosition);
+        item.className = 'visit-desktop';
+        item.label =
+            strf('VISIT_DESKTOP_OF_USER', profile.displayName);
+        item.addEventListener('activate', function(inProfile, event) {
+          // Stop propagate and hide the menu manually, in order to prevent the
+          // focus from being back to the button. (cf. http://crbug.com/248479)
+          event.stopPropagation();
+          this.gearButton_.hideMenu();
+          this.gearButton_.blur();
+          chrome.fileBrowserPrivate.visitDesktop(inProfile.profileId,
+                                                 function() {
+            this.ui_.updateProfileBatch();
+          }.bind(this));
+        }.bind(this, profile));
+      }
+    }.bind(this));
+  };
+
+  /**
    * Refreshes space info of the current volume.
    * @param {boolean} showLoadingCaption Whether show loading caption or not.
    * @private
@@ -2261,13 +2325,6 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
         this.getCurrentDirectoryEntry() &&
         this.getCurrentDirectoryEntry().fullPath, '' /* opt_param */);
 
-    // If the current directory is moved from the device's volume, do not
-    // automatically close the window on device removal.
-    if (event.previousDirEntry &&
-        PathUtil.getRootPath(event.previousDirEntry.fullPath) !=
-            PathUtil.getRootPath(event.newDirEntry.fullPath))
-      this.closeOnUnmount_ = false;
-
     if (this.commandHandler)
       this.commandHandler.updateAvailability();
 
@@ -2275,9 +2332,16 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
     this.updateTitle_();
     var newCurrentVolumeInfo = this.volumeManager_.getVolumeInfo(
         event.newDirEntry);
+
     // If volume has changed, then update the gear menu.
-    if (this.currentVolumeInfo_ !== newCurrentVolumeInfo)
+    if (this.currentVolumeInfo_ !== newCurrentVolumeInfo) {
       this.updateGearMenu_();
+      // If the volume has changed, and it was previously set, then do not
+      // close on unmount anymore.
+      if (this.currentVolumeInfo_)
+        this.closeOnUnmount_ = false;
+    }
+
     var currentEntry = this.getCurrentDirectoryEntry();
     this.previewPanel_.currentEntry = util.isFakeEntry(currentEntry) ?
         null : currentEntry;
@@ -2457,8 +2521,8 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
 
             // Show error dialog.
             var message;
-            if (error.code == FileError.PATH_EXISTS_ERR ||
-                error.code == FileError.TYPE_MISMATCH_ERR) {
+            if (error.name == util.FileError.PATH_EXISTS_ERR ||
+                error.name == util.FileError.TYPE_MISMACH_ERR) {
               // Check the existing entry is file or not.
               // 1) If the entry is a file:
               //   a) If we get PATH_EXISTS_ERR, a file exists.
@@ -2467,14 +2531,16 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
               //   a) If we get PATH_EXISTS_ERR, a directory exists.
               //   b) If we get TYPE_MISMATCH_ERR, a file exists.
               message = strf(
-                  (entry.isFile && error.code == FileError.PATH_EXISTS_ERR) ||
-                  (!entry.isFile && error.code == FileError.TYPE_MISMATCH_ERR) ?
+                  (entry.isFile && error.name ==
+                      util.FileError.PATH_EXISTS_ERR) ||
+                  (!entry.isFile && error.name ==
+                      util.FileError.TYPE_MISMACH_ERR) ?
                       'FILE_ALREADY_EXISTS' :
                       'DIRECTORY_ALREADY_EXISTS',
                   newName);
             } else {
               message = strf('ERROR_RENAMING', entry.name,
-                             util.getFileErrorString(error.code));
+                             util.getFileErrorString(error.name));
             }
 
             this.alert.show(message);
@@ -2761,7 +2827,7 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
 
     var onError = function(error) {
       self.alert.show(strf('ERROR_CREATING_FOLDER', current(),
-                           util.getFileErrorString(error.code)));
+                           util.getFileErrorString(error.name)));
     };
 
     tryCreate();
@@ -2776,9 +2842,8 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
     // from being back to the button. (cf. http://crbug.com/248479)
     event.stopPropagation();
     this.gearButton_.hideMenu();
-
+    this.gearButton_.blur();
     this.setListType(FileManager.ListType.DETAIL);
-    this.currentList_.focus();
   };
 
   /**
@@ -2790,9 +2855,8 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
     // from being back to the button. (cf. http://crbug.com/248479)
     event.stopPropagation();
     this.gearButton_.hideMenu();
-
+    this.gearButton_.blur();
     this.setListType(FileManager.ListType.THUMBNAIL);
-    this.currentList_.focus();
   };
 
   /**
@@ -3166,13 +3230,13 @@ var BOTTOM_MARGIN_FOR_PREVIEW_PANEL_PX = 52;
                                 selectFileAndClose);
             }.bind(this),
             function(error) {
-              if (error.code == FileError.NOT_FOUND_ERR) {
+              if (error.name == util.FileError.NOT_FOUND_ERR) {
                 // The file does not exist, so it should be ok to create a
                 // new file.
                 selectFileAndClose();
                 return;
               }
-              if (error.code == FileError.TYPE_MISMATCH_ERR) {
+              if (error.name == util.FileError.TYPE_MISMACH_ERR) {
                 // An directory is found.
                 // Do not allow to overwrite directory.
                 this.alert.show(strf('DIRECTORY_ALREADY_EXISTS', filename));
