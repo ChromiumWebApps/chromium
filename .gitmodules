@@ -106,6 +106,10 @@
 	path = third_party/chromite
 	url = https://chromium.googlesource.com/chromiumos/chromite.git
 	os = unix
+[submodule "third_party/clang_format/script"]
+	path = third_party/clang_format/script
+	url = https://chromium.googlesource.com/chromium/llvm-project/cfe/tools/clang-format.git
+	os = all
 [submodule "third_party/cld_2/src"]
 	path = third_party/cld_2/src
 	url = https://chromium.googlesource.com/external/cld2.git
