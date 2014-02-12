@@ -12,7 +12,7 @@
 #include "base/logging.h"
 #include "base/message_loop/message_loop.h"
 #include "jni/MojoMain_jni.h"
-#include "mojo/public/shell/service.h"
+#include "mojo/public/shell/application.h"
 #include "mojo/services/native_viewport/native_viewport_service.h"
 #include "mojo/shell/context.h"
 #include "mojo/shell/init.h"
@@ -25,8 +25,6 @@ using base::LazyInstance;
 namespace mojo {
 
 namespace {
-
-base::AtExitManager* g_at_exit = 0;
 
 LazyInstance<scoped_ptr<base::MessageLoop> > g_java_message_loop =
     LAZY_INSTANCE_INITIALIZER;
@@ -43,10 +41,10 @@ class NativeViewportServiceLoader : public shell::ServiceConnector::Loader {
   virtual void Load(const GURL& url,
                     ScopedShellHandle service_handle)
       MOJO_OVERRIDE {
-    service_.reset(CreateNativeViewportService(g_context.Get().get(),
-                                               service_handle.Pass()));
+    app_.reset(CreateNativeViewportService(g_context.Get().get(),
+                                           service_handle.Pass()));
   }
-  scoped_ptr<ServiceFactoryBase> service_;
+  scoped_ptr<Application> app_;
 };
 
 LazyInstance<scoped_ptr<NativeViewportServiceLoader> >
@@ -58,11 +56,6 @@ static void Init(JNIEnv* env, jclass clazz, jobject context) {
   base::android::ScopedJavaLocalRef<jobject> scoped_context(env, context);
 
   base::android::InitApplicationContext(env, scoped_context);
-
-  if (g_at_exit)
-    return;
-  g_at_exit = new base::AtExitManager();
-  // TODO(abarth): Currently we leak g_at_exit.
 
   CommandLine::Init(0, 0);
   mojo::shell::InitializeLogging();
