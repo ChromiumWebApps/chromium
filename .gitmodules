@@ -68,7 +68,7 @@
 	os = ios
 [submodule "third_party/WebKit"]
 	path = third_party/WebKit
-	url = https://chromium.googlesource.com/chromium/blink.git
+	url = git@github.com:ChromiumWebApps/blink.git
 	os = all
 [submodule "third_party/android_tools"]
 	path = third_party/android_tools
